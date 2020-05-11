@@ -7,10 +7,16 @@ import * as serviceWorker from './serviceWorker';
 class App extends React.Component {
     render() {
         return (
+            <Router>
                 <div>
                     <h1>My Generative Artworks</h1>
                 </div>
 
+                <Switch>
+                    <Route exact path="/">
+                    </Route>
+                </Switch>
+            </Router>
         )
     }
 }
