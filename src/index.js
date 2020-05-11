@@ -15,7 +15,11 @@ class App extends React.Component {
                 <Switch>
                     <Route exact path="/">
                         <ArtList />
+                    </Route>
 
+                    {/* the artwork name from the url is automatically passed to the component */}
+                    <Route exact path="/view/:name">
+                        <ArtCanvas />
                     </Route>
                 </Switch>
             </Router>
