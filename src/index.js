@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import ArtList from './components/ArtList';
+import ArtCanvas from './components/ArtCanvas';
 
 class App extends React.Component {
     render() {
@@ -12,6 +14,8 @@ class App extends React.Component {
 
                 <Switch>
                     <Route exact path="/">
+                        <ArtList />
+
                     </Route>
                 </Switch>
             </Router>
