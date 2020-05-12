@@ -17,6 +17,14 @@ class ArtCanvas extends React.Component {
 
 
     renderCanvas() {
+        // only create a canvas when a matching artwork is found at this url
+        if (!this.state.filename) {
+            return <h2>Invalid artwork selected.</h2>;
+        }
+
+        // TODO: look into race conditions with doing this right before the canvas is returned/rendered
+        this.loadExternalScript(this.state.scriptPath + this.state.filename);
+
         return <canvas width={this.state.width} height={this.state.height} />
     }
 
@@ -34,12 +42,11 @@ class ArtCanvas extends React.Component {
     }
 
     render() {
-        console.log(this.props)
         return (
-            // store a reference to this div within the class, to append the externam script to
+            // store a reference to this div within the class, to append the external script to
             <div ref={el => (this.canvasDiv = el)}>
                 <h2>
-                    { this.state.name }
+                    { this.state.title }
                 </h2>
                 { this.renderCanvas() }
             </div>
