@@ -18,9 +18,19 @@ class ArtList extends React.Component {
 
     }
 
+    getFilepath(dimensional, name) {
+        if (dimensional === "2d") {
+            return `/art/${dimensional}/${name}`;
+        }
+
+        if (dimensional === "3d") {
+            //TODO: add 3d support
+        }
+    }
+
     renderTiles() {
         return artworkList.twoDimensional.map(artwork => {
-            return <ArtTile title={artwork.title} description={artwork.description} path={artwork.path} key={artwork.title} />;
+            return <ArtTile title={artwork.title} description={artwork.description} path={this.getFilepath('2d', artwork.title)} key={artwork.title} />;
         });
     }
     
