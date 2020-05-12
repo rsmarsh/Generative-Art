@@ -9,7 +9,7 @@ class App extends React.Component {
         return (
             <Router>
                 <div>
-                    <h1>My Generative Artworks</h1>
+                    <h1>My Projects</h1>
                 </div>
 
                 <Switch>
@@ -17,8 +17,8 @@ class App extends React.Component {
                         <ArtList />
                     </Route>
 
-                    {/* the artwork name from the url is automatically passed to the component */}
-                    <Route exact path="/view/:name">
+                    {/* the artwork name and dimension (2d/3d) from the url is automatically passed to the component */}
+                    <Route exact path="/art/:dimensional/:name">
                         <ArtCanvas />
                     </Route>
                 </Switch>
