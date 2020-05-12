@@ -1,6 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
+import artworkList from '../artwork/artwork-list.json';
+
 class ArtCanvas extends React.Component {
     // get the requested artwork name from the url
     state = {
@@ -12,7 +14,7 @@ class ArtCanvas extends React.Component {
             width: this.props.width || 800,
             height: this.props.height || 800
         },
-        scriptPath: '/src/artwork/scripts/'
+        scriptPath: '/artwork/'
     }
 
 
@@ -28,13 +30,36 @@ class ArtCanvas extends React.Component {
         return <canvas width={this.state.width} height={this.state.height} />
     }
 
+    retrieveArtworkData(title) {
+        let dimensional;
+        if (this.state.dimensional === '2d') {
+            dimensional = "twoDimensional";
+        } else if (this.state.dimensional === '3d') {
+            dimensional = "threeDimensional";
+        }
+        
+        let artworkArray = artworkList[dimensional];
+
+        if (Array.isArray(artworkArray)) {
+            return artworkArray.find(art => art.title === title);
+        }
+
+        return false;
+    }
+
     // initialise loading of external JS script
-    componentDidMount() {        
-        this.loadExternalScript(this.state.scriptPath + this.state.name + '.js') 
+    componentDidMount() {   
+
+        const artwork = this.retrieveArtworkData(this.state.title);
+        if (!artwork) {
+            return;
+        }
+
+        this.setState({...artwork}); 
+        
     }
 
     loadExternalScript(filepath) {
-        console.log(filepath);
         const script = document.createElement("script");
         script.async = true;
         script.src = filepath;
