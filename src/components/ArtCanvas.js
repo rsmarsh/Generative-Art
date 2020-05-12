@@ -4,7 +4,10 @@ import { withRouter } from 'react-router-dom';
 class ArtCanvas extends React.Component {
     // get the requested artwork name from the url
     state = {
-        name: this.props.match.params.name,
+        title: this.props.match.params.name,
+        descripton: "",
+        filename: "",
+        dimensional: this.props.match.params.dimensional, // typically "2d" or "3d"
         dimension: {
             width: this.props.width || 800,
             height: this.props.height || 800
