@@ -72,7 +72,7 @@ class ArtCanvas extends React.Component {
     componentDidUpdate() {
         if (this.state.activeArtModule) {
             const canvasCtx = this.refs.artcanvas.getContext('2d'); 
-            this.state.activeArtModule(canvasCtx);
+            this.state.activeArtModule(canvasCtx, this.state.dimension.width, this.state.dimension.height);
         }
 
     }
