@@ -4,20 +4,25 @@ import { withRouter } from 'react-router-dom';
 import artworkList from './artwork/artwork-list.json';
 
 class ArtCanvas extends React.Component {
-    // get the requested artwork name from the url
-    state = {
-        title: this.props.match.params.name,
-        descripton: "",
-        filename: "",
-        dimensional: this.props.match.params.dimensional, // typically "2d" or "3d"
-        dimension: {
-            width: this.props.width || 800,
-            height: this.props.height || 800
-        },
-        scriptPath: '/artwork/'
+
+    constructor(props) {
+        super(props);
+
+        // get the requested artwork name from the url
+        this.state = {
+            title: props.match.params.name,
+            descripton: "",
+            filename: "",
+            dimensional: props.match.params.dimensional, // typically "2d" or "3d"
+            dimension: {
+                width: props.width || 800,
+                height: props.height || 800
+            },
+            scriptPath: '/artwork/',
+            activeArtModule: null
+        }
     }
-
-
+    
     renderCanvas() {
         // only create a canvas when a matching artwork is found at this url
         if (!this.state.filename) {
