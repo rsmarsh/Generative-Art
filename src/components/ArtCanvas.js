@@ -29,10 +29,15 @@ class ArtCanvas extends React.Component {
             return <h2>Invalid artwork selected.</h2>;
         }
 
-        // TODO: look into race conditions with doing this right before the canvas is returned/rendered
-        this.loadExternalScript(this.state.scriptPath + this.state.filename);
-
-        return <canvas width={this.state.width} height={this.state.height} />
+        
+        if (!this.state.activeArtModule) {
+            // TODO: look into race conditions with doing this right before the canvas is returned/rendered
+            // this.loadExternalScript(this.state.scriptPath + this.state.filename);
+            this.loadArtComponent(this.state.scriptPath + this.state.filename);
+            return <h2>Loading canvas...</h2>;
+        }
+        this.canvasRef = <canvas ref="artcanvas" width={this.state.dimension.width} height={this.state.dimension.height} />
+        return this.canvasRef;
     }
 
     retrieveArtworkData(title) {
