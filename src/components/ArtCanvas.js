@@ -68,6 +68,14 @@ class ArtCanvas extends React.Component {
         this.setState({...artwork}); 
         
     }
+    
+    componentDidUpdate() {
+        if (this.state.activeArtModule) {
+            const canvasCtx = this.refs.artcanvas.getContext('2d'); 
+            this.state.activeArtModule(canvasCtx);
+        }
+
+    }
 
     loadArtComponent = async (filepath) => {
         // dynamically import the instruction for this artwork to render
