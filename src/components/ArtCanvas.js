@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
-import artworkList from '../artwork/artwork-list.json';
+import artworkList from './artwork/artwork-list.json';
 
 class ArtCanvas extends React.Component {
     // get the requested artwork name from the url
@@ -33,9 +33,9 @@ class ArtCanvas extends React.Component {
     retrieveArtworkData(title) {
         let dimensional;
         if (this.state.dimensional === '2d') {
-            dimensional = "twoDimensional";
+            dimensional = 'twoDimensional';
         } else if (this.state.dimensional === '3d') {
-            dimensional = "threeDimensional";
+            dimensional = 'threeDimensional';
         }
         
         let artworkArray = artworkList[dimensional];
@@ -59,11 +59,13 @@ class ArtCanvas extends React.Component {
         
     }
 
-    loadExternalScript(filepath) {
-        const script = document.createElement("script");
-        script.async = true;
-        script.src = filepath;
-        this.canvasDiv.appendChild(script);
+    loadArtComponent = async (filepath) => {
+        // dynamically import the instruction for this artwork to render
+        const artComponent = await import(`.${filepath}`);
+
+        this.setState({
+            activeArtModule: artComponent.default
+        });
     }
 
     render() {
