@@ -1,7 +1,7 @@
 import React from 'react';
 import ArtTile from './ArtTile';
 
-import artworkList from '../artwork/artwork-list.json';
+import artworkList from './artwork/artwork-list.json';
 
 
 
