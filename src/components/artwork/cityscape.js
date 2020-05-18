@@ -48,7 +48,7 @@ const Cityscape = (ctx, width, height, createSetting) => {
     
     random.setSeed(configOptions.seed);
     drawToCanvas(ctx, width, height);
-    createSettings(createSetting);
+    // createSettings(createSetting); // TODO: reimplement once functionality is available
 
 };
 
