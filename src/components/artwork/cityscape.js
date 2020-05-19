@@ -44,17 +44,17 @@ const userOptions = [
 ];
 
 
-const Cityscape = (ctx, width, height, createSetting) => {
+const Cityscape = (ctx, width, height, addSettings) => {
     
     random.setSeed(configOptions.seed);
     drawToCanvas(ctx, width, height);
-    // createSettings(createSetting); // TODO: reimplement once functionality is available
+    createSettings(addSettings);
 
 };
 
 // trigger the callback with al of the customisation options
-const createSettings = (createSetting) => {
-    userOptions.forEach(createSetting);
+const createSettings = (addSettings) => {
+    addSettings(userOptions);
 };
 
 // receives an object containing the setting changed and its new value
