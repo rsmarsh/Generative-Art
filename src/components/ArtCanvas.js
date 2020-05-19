@@ -3,7 +3,8 @@ import React from 'react';
 
 import artworkList from './artwork/artwork-list.json';
 
-class ArtCanvas extends React.Component {
+// PureComponent helps to prevent unnecessary renders using a shallow props check
+class ArtCanvas extends React.PureComponent {
 
     constructor(props) {
         super(props);
@@ -31,8 +32,6 @@ class ArtCanvas extends React.Component {
 
         
         if (!this.state.activeArtModule) {
-            // TODO: look into race conditions with doing this right before the canvas is returned/rendered
-            // this.loadExternalScript(this.state.scriptPath + this.state.filename);
             this.loadArtComponent(this.state.scriptPath + this.state.filename);
             return <h2>Loading canvas...</h2>;
         }
@@ -50,6 +49,7 @@ class ArtCanvas extends React.Component {
         
         let artworkArray = artworkList[dimensional];
 
+        // check that the provided dimensional setting is valid
         if (Array.isArray(artworkArray)) {
             return artworkArray.find(art => art.title === title);
         }
@@ -72,7 +72,7 @@ class ArtCanvas extends React.Component {
     componentDidUpdate() {
         if (this.state.activeArtModule) {
             const canvasCtx = this.refs.artcanvas.getContext('2d'); 
-            this.state.activeArtModule(canvasCtx, this.state.dimension.width, this.state.dimension.height);
+            this.state.activeArtModule(canvasCtx, this.state.dimension.width, this.state.dimension.height, this.props.addSettings);
         }
 
     }
@@ -80,10 +80,11 @@ class ArtCanvas extends React.Component {
     loadArtComponent = async (filepath) => {
         // dynamically import the instruction for this artwork to render
         const artComponent = await import(`.${filepath}`);
-
         this.setState({
             activeArtModule: artComponent.default
         });
+
+        return;
     }
 
     render() {
