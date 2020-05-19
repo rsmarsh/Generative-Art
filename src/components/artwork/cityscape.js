@@ -3,7 +3,7 @@ const random = require('canvas-sketch-util/random');
 const palettes = require('nice-color-palettes');
 
 // initial default values, but may be overridden by user selected options
-const configOptions = {
+let configOptions = {
     gridCount: 6,
     lineWidth: 20,
     seed: random.getRandomSeed(),
@@ -88,7 +88,6 @@ const createGrid = () => {
 };
 
 const drawToCanvas = (ctx, width, height) => {
-    console.log("renderToCanvas function");
 
     let points = createGrid();
     const margin = width * 0.05;
@@ -120,7 +119,6 @@ const drawToCanvas = (ctx, width, height) => {
         let xPos2 = lerp(margin, width - margin, u2);
         let yPos2 = lerp(margin, height - margin, v2);
 
-        console.log(xPos1, xPos2, yPos1, yPos2)
         ctx.beginPath();
         ctx.moveTo(xPos1, yPos1);
 
