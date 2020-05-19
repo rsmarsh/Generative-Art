@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ArtList from './components/ArtList';
-import ArtContainer from './components/ArtCanvas';
+import ArtContainer from './components/ArtContainer';
 
 class App extends React.Component {
     render() {
