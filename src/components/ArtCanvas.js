@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 
 import artworkList from './artwork/artwork-list.json';
 
@@ -10,19 +10,19 @@ class ArtCanvas extends React.Component {
 
         // get the requested artwork name from the url
         this.state = {
-            title: props.match.params.name,
+            title: props.name,
             descripton: "",
             filename: "",
-            dimensional: props.match.params.dimensional, // typically "2d" or "3d"
+            dimensional: props.dimensional, // typically "2d" or "3d"
             dimension: {
                 width: props.width || 800,
                 height: props.height || 800
             },
             scriptPath: '/artwork/',
             activeArtModule: null
-        }
+        };
     }
-    
+
     renderCanvas() {
         // only create a canvas when a matching artwork is found at this url
         if (!this.state.filename) {
@@ -99,4 +99,4 @@ class ArtCanvas extends React.Component {
     }
 }
 
-export default withRouter(ArtCanvas);
+export default ArtCanvas;
