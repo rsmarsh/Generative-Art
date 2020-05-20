@@ -18,59 +18,62 @@ class ArtSetting extends React.Component {
     }
 
     renderSetting = setting => {
-
+        let input;
+        
         switch(setting.type) {
             case 'checkbox':
-                return this.renderCheckbox(setting);
+                input = this.renderCheckbox(setting);
+                break;
             case 'slider': 
-                return this.renderSlider(setting);
+                input = this.renderSlider(setting);
+                break;
             case 'number':
             case 'text':
-                return this.renderInput(setting);
+                input = this.renderInput(setting);
+                break;
             default:
                 return <p>invalid setting found</p>
         }
+
+        // wrap the input in a label before returning
+        return (
+            <label className="artwork-setting">
+                {setting.label}:
+                {input}
+            </label>
+        );
     };
     
     renderCheckbox = (setting) => {
         return (
-            <label>
-                {setting.label}:
-                <input 
-                    type="checkbox" 
-                    defaultChecked={this.state.value}
-                    onChange={e => this.setState({value: e.target.checked})}
-                />
-            </label>
+            <input 
+                type="checkbox" 
+                defaultChecked={this.state.value}
+                onChange={e => this.setState({value: e.target.checked})}
+            />
         );
     };
     
     renderSlider = (setting) => {
         return (
-            <label>
-                {setting.label}:
-                <input 
-                    type="range"
-                    min={setting.bounds.min} 
-                    max={setting.bounds.max} 
-                    value={this.state.value} 
-                    onChange={e => this.setState({value: e.target.value})} 
-                    className="slider" 
-                />
-            </label>
+            <input 
+                type="range"
+                min={setting.bounds.min} 
+                max={setting.bounds.max} 
+                value={this.state.value} 
+                onChange={e => this.setState({value: e.target.value})} 
+                className="slider" 
+            />
         );
     };
     
     renderInput = (setting) => {
         return (
-            <label>
-                {setting.label}:
-                <input 
-                    type={setting.type}
-                    value={this.state.value} 
-                    onChange={e => this.setState({value: e.target.value})}
-                />
-            </label>
+            <input 
+                type={setting.type}
+                value={this.state.value} 
+                onChange={e => this.setState({value: e.target.value})}
+            />
         );
     };
 
