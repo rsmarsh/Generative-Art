@@ -44,9 +44,10 @@ const userOptions = [
 ];
 
 
-const Cityscape = (ctx, width, height, addSettings) => {
+const Cityscape = (ctx, width, height, addSettings, customSettings = {}) => {
     
     random.setSeed(configOptions.seed);
+    let artSettings = {...configOptions, ...customSettings};
     drawToCanvas(ctx, width, height);
     createSettings(addSettings);
 

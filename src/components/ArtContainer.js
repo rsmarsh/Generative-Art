@@ -37,7 +37,7 @@ class ArtContainer extends React.Component {
 
     // this function is passed to the canvas as a callback for each individual artwork to use if required
     addSettings = (setting) => {
-        let settingArray = [...this.state.settingList]; // use spread to prevent modifying the state's array directly
+        let settingArray = []; // use spread to prevent modifying the state's array directly
 
         // allow for both single settings, and an array of settings to be passed into this function
         if (Array.isArray(setting)) {
@@ -68,7 +68,7 @@ class ArtContainer extends React.Component {
                 {this.renderSettings()}
             </div>
 
-        )
+        );
     }
 }
 
