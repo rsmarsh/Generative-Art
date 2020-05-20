@@ -9,13 +9,30 @@ class ArtContainer extends React.Component {
         super(props);
 
         this.state = {
-            settingList: []
+            settingList: [],
+            settingValues: {} // as custom changes are made using the settings, this object is populated
         };
     }
 
     // return a list of settings available for the currently open artwork 
     renderSettings() {
-        return this.state.settingList.map(setting => <ArtSetting key={setting.property} setting={setting} />)
+        return this.state.settingList.map(setting => 
+            <ArtSetting 
+                key={setting.property} 
+                property={setting.property} 
+                setting={setting} 
+                handleSettingChange={this.handleSettingChange}
+            />
+        );
+    }
+
+    // passed to each setting as a callback. this allows the input to inform the canvas each time a setting is changed
+    handleSettingChange = (setting, value) => {
+        
+        let settingValues = {...this.state.settingValues, [setting]: value};
+        this.setState({
+            settingValues
+        });
     }
 
     // this function is passed to the canvas as a callback for each individual artwork to use if required
