@@ -59,7 +59,12 @@ class ArtContainer extends React.Component {
         
         return (
             <div>
-                <ArtCanvas name={this.props.match.params.name} dimensional={this.props.match.params.dimensional} addSettings={this.addSettings} />
+                <ArtCanvas 
+                    name={this.props.match.params.name} 
+                    dimensional={this.props.match.params.dimensional} 
+                    addSettings={this.addSettings}
+                    settingValues={this.state.settingValues}
+                />
                 {this.renderSettings()}
             </div>
 
