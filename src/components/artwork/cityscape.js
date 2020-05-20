@@ -48,7 +48,7 @@ const Cityscape = (ctx, width, height, addSettings, customSettings = {}) => {
     
     random.setSeed(configOptions.seed);
     let artSettings = {...configOptions, ...customSettings};
-    drawToCanvas(ctx, width, height);
+    drawToCanvas(ctx, width, height, artSettings);
     createSettings(addSettings);
 
 };
@@ -88,8 +88,8 @@ const createGrid = () => {
     return points;
 };
 
-const drawToCanvas = (ctx, width, height) => {
-
+const drawToCanvas = (ctx, width, height, settings) => {
+    console.log("draw to canvas");
     let points = createGrid();
     const margin = width * 0.05;
 
@@ -111,7 +111,7 @@ const drawToCanvas = (ctx, width, height) => {
         let [u2, v2] = point2.position;
 
         // don't allow x axis to be shared, or rectangles to form
-        if (configOptions.preventRectangles && (u1 === u2 || v1 === v2)) {
+        if (settings.preventRectangles && (u1 === u2 || v1 === v2)) {
             continue;
         }
 
@@ -133,7 +133,7 @@ const drawToCanvas = (ctx, width, height) => {
 
         // stroke with a background colour
         ctx.strokeStyle = fillColour;
-        ctx.lineWidth = configOptions.lineWidth;
+        ctx.lineWidth = settings.lineWidth;
         ctx.fillStyle = point1.color;
         ctx.fill();
 
