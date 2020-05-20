@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './ArtSetting.css';
+
 class ArtSetting extends React.Component {
     constructor(props) {
         super(props);
