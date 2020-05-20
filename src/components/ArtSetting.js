@@ -17,6 +17,30 @@ class ArtSetting extends React.Component {
         );
     }
 
+    handleInputChange = (e) => {
+        const setting = this.props.property;
+        let newValue;
+
+        switch(e.target.type){
+            case 'checkbox':
+                newValue = (e.target.value === 'on');
+                break;
+            case 'range':
+                newValue = Number(e.target.value);
+                break;
+            case 'number':
+                newValue = Number(e.target.value);
+                break;
+        }
+
+        // trigger a rerender with this inputs newest value
+        this.setState({value: newValue});
+
+        // inform the ArtContainer that a setting has been changed
+        this.props.handleSettingChange(setting, newValue);
+
+    }
+
     renderSetting = setting => {
         let input;
         
@@ -49,7 +73,7 @@ class ArtSetting extends React.Component {
             <input 
                 type="checkbox" 
                 defaultChecked={this.state.value}
-                onChange={e => this.setState({value: e.target.checked})}
+                onChange={this.handleInputChange}
             />
         );
     };
@@ -61,7 +85,7 @@ class ArtSetting extends React.Component {
                 min={setting.bounds.min} 
                 max={setting.bounds.max} 
                 value={this.state.value} 
-                onChange={e => this.setState({value: e.target.value})} 
+                onChange={this.handleInputChange} 
                 className="slider" 
             />
         );
@@ -72,14 +96,11 @@ class ArtSetting extends React.Component {
             <input 
                 type={setting.type}
                 value={this.state.value} 
-                onChange={e => this.setState({value: e.target.value})}
+                onChange={this.handleInputChange}
             />
         );
     };
 
-    handleChange = (event) => {
-
-    };
 };
 
 export default ArtSetting;
