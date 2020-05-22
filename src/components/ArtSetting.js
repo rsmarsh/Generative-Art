@@ -31,6 +31,8 @@ class ArtSetting extends React.Component {
             case 'number':
                 newValue = Number(e.target.value);
                 break;
+            default:
+                return;
         }
 
         // trigger a rerender with this inputs newest value

@@ -47,7 +47,9 @@ const userOptions = [
 const Cityscape = (ctx, width, height, addSettings, customSettings = {}) => {
     
     random.setSeed(configOptions.seed);
+    // merge in and overwrite any default settings with the user defined settings
     let artSettings = {...configOptions, ...customSettings};
+    // TODO: clear canvas before redrawing
     drawToCanvas(ctx, width, height, artSettings);
     createSettings(addSettings);
 
@@ -67,9 +69,9 @@ const updateSetting = (settingChange) => {
 };
 
 // creates a grid of points which are used as anchor points for each shape
-const createGrid = () => {
+const createGrid = (gridSize) => {
     const points = [];
-    const count = configOptions.gridCount;
+    const count = gridSize;
     const palette = random.shuffle(random.pick(palettes))
 
     for (let x = 0; x < count; x++) {
@@ -90,7 +92,7 @@ const createGrid = () => {
 
 const drawToCanvas = (ctx, width, height, settings) => {
     console.log("draw to canvas");
-    let points = createGrid();
+    let points = createGrid(settings.gridCount);
     const margin = width * 0.05;
 
     // pick one random colour from the array of colours
