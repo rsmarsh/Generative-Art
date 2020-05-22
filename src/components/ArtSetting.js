@@ -23,7 +23,7 @@ class ArtSetting extends React.Component {
 
         switch(e.target.type){
             case 'checkbox':
-                newValue = (e.target.value === 'on');
+                newValue = e.target.checked;
                 break;
             case 'range':
                 newValue = Number(e.target.value);

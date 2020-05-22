@@ -7,7 +7,7 @@ let configOptions = {
     gridCount: 6,
     lineWidth: 20,
     seed: random.getRandomSeed(),
-    preventRectangles: true
+    allowRectangles: false
 };
 
 // the customisable options available to the user to modify the output
@@ -20,7 +20,7 @@ const userOptions = [
         property: "gridCount",
         default: configOptions.gridCount,
         bounds: {
-            min: 1,
+            min: 2,
             max: 50,
         }
     },
@@ -33,12 +33,12 @@ const userOptions = [
         default: configOptions.lineWidth
     },
 
-    // prevent flat topped rectangles to form
+    // allow flat topped rectangles to form
     {
         type: "checkbox",
         label: "Allow Rectangles",
         property: "allowRectangles",
-        default: configOptions.preventRectangles
+        default: configOptions.allowRectangles
     }
 
 ];
@@ -91,7 +91,7 @@ const createGrid = (gridSize) => {
 };
 
 const drawToCanvas = (ctx, width, height, settings) => {
-    console.log("draw to canvas");
+
     let points = createGrid(settings.gridCount);
     const margin = width * 0.05;
 
@@ -112,8 +112,10 @@ const drawToCanvas = (ctx, width, height, settings) => {
         let [u1, v1] = point1.position;
         let [u2, v2] = point2.position;
 
+        console.log(settings.preventRectangles);
+
         // don't allow x axis to be shared, or rectangles to form
-        if (settings.preventRectangles && (u1 === u2 || v1 === v2)) {
+        if (settings.allowRectangles === false && (u1 === u2 || v1 === v2)) {
             continue;
         }
 
