@@ -81,6 +81,21 @@ class ArtSetting extends React.Component {
     };
     
     renderSlider = (setting) => {
+
+        // don't allow a render with a value exceeding the min/max bounds
+        if (this.state.value < setting.bounds.min) {
+            this.setState({
+                value: setting.bounds.min
+            });
+            return;
+        }
+        if (this.state.value > setting.bounds.max) {
+            this.setState({
+                value: setting.bounds.max
+            });
+            return;
+        } 
+
         return (
             <input 
                 type="range"
