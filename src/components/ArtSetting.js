@@ -97,6 +97,7 @@ class ArtSetting extends React.Component {
         } 
 
         return (
+            <div className="setting-group">
             <input 
                 type="range"
                 min={setting.bounds.min} 
@@ -105,6 +106,8 @@ class ArtSetting extends React.Component {
                 onChange={this.handleInputChange} 
                 className="slider" 
             />
+                <input type="number" value={this.state.value} onChange={this.handleInputChange} />
+            </div>
         );
     };
     
@@ -116,6 +119,10 @@ class ArtSetting extends React.Component {
                 onChange={this.handleInputChange}
             />
         );
+    };
+
+    renderButton = (setting) => {
+        //TODO: add button functionality with a custom callback
     };
 
 };
