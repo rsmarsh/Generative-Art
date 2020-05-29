@@ -98,14 +98,14 @@ class ArtSetting extends React.Component {
 
         return (
             <div className="setting-group">
-            <input 
-                type="range"
-                min={setting.bounds.min} 
-                max={setting.bounds.max} 
-                value={this.state.value} 
-                onChange={this.handleInputChange} 
-                className="slider" 
-            />
+                <input 
+                    type="range"
+                    min={setting.bounds.min} 
+                    max={setting.bounds.max} 
+                    value={this.state.value} 
+                    onChange={this.handleInputChange} 
+                    className="slider" 
+                />
                 <input type="number" value={this.state.value} onChange={this.handleInputChange} />
             </div>
         );
