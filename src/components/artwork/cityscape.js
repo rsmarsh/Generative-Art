@@ -21,7 +21,7 @@ const userOptions = [
         default: configOptions.gridCount,
         bounds: {
             min: 2,
-            max: 50,
+            max: 30,
         }
     },
 
