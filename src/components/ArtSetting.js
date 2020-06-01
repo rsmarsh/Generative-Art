@@ -81,15 +81,33 @@ class ArtSetting extends React.Component {
     };
     
     renderSlider = (setting) => {
+
+        // don't allow a render with a value exceeding the min/max bounds
+        if (this.state.value < setting.bounds.min) {
+            this.setState({
+                value: setting.bounds.min
+            });
+            return;
+        }
+        if (this.state.value > setting.bounds.max) {
+            this.setState({
+                value: setting.bounds.max
+            });
+            return;
+        } 
+
         return (
-            <input 
-                type="range"
-                min={setting.bounds.min} 
-                max={setting.bounds.max} 
-                value={this.state.value} 
-                onChange={this.handleInputChange} 
-                className="slider" 
-            />
+            <div className="setting-group">
+                <input 
+                    type="range"
+                    min={setting.bounds.min} 
+                    max={setting.bounds.max} 
+                    value={this.state.value} 
+                    onChange={this.handleInputChange} 
+                    className="slider" 
+                />
+                <input type="number" value={this.state.value} onChange={this.handleInputChange} />
+            </div>
         );
     };
     
@@ -101,6 +119,10 @@ class ArtSetting extends React.Component {
                 onChange={this.handleInputChange}
             />
         );
+    };
+
+    renderButton = (setting) => {
+        //TODO: add button functionality with a custom callback
     };
 
 };
