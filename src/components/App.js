@@ -3,6 +3,8 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ArtList from './ArtList';
 import ArtContainer from './ArtContainer';
 
+import './App.css';
+
 class App extends React.Component {
     render() {
         return (
