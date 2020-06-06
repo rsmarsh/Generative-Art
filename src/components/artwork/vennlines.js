@@ -51,6 +51,7 @@ const Vennlines = (ctx, width, height, addSettings, customSettings = {}) => {
     // merge in and overwrite any default settings with the user defined settings
     let artSettings = {...configOptions, ...customSettings};
     drawToCanvas(ctx, width, height, artSettings);
+
     createSettings(addSettings);
 
 };
@@ -68,6 +69,8 @@ const createGrid = (gridSize) => {
     let rows = [];
     let columns = [];
 
+    // so that cells can be identified as touching the edge
+    const edge = count-1;
 
     // create an equal x/y grid
     for (let row = 0; row < count; row++) {
@@ -81,8 +84,29 @@ const createGrid = (gridSize) => {
                 top: false,
                 right: false,
                 bottom: false,
-                left: false
+                left: false,
+                edge: false
             };
+
+            // flip the edge boolean so that edge pieces can be easily found
+            if ( (row === 0 || row === edge) || (col === 0 || col === edge)) {
+                cells[row][col].edge = true;
+                
+                // find which edge of the cell is touching a side
+                let touching;
+                if (row === 0) {
+                    touching = 'top';
+                } else if (row === edge) {
+                    touching = 'bottom';
+                } else if (col === 0) {
+                    touching = 'left';
+                } else if (col === edge) {
+                    touching = 'right';
+                } else {
+                    console.error('edge piece without an identifiable side');
+                }
+                cells[row][col].touching = touching;
+            }
 
         }
     }
@@ -98,21 +122,44 @@ const drawToCanvas = (ctx, width, height, settings) => {
     canvasWidth = width;
     canvasHeight = height;
     
-    console.log(cellGrid)
+    console.log(cellGrid);
     canvasMargin = width * 0.05;
 
-    let startCell = getCell(4,4);
-    let endCell = getCell(2,4);
-
-    let [startX, startY] = getDrawPosFromCell(startCell, 'left');
-    let [endX, endY] = getDrawPosFromCell(endCell, 'top');
-    
     // pick one random colour from the array of colours
     const fillColour = random.pick(random.pick(palettes));
 
+    
+};
+
+const getFreeEdgeCell = () => {
+    let cell = random.pick(cellGrid.flat());
+    let direction;
+
+    // find out which side if the cell is touching an edge
+    if (cell.y === 0) {
+        direction = 'left';
+    } else if (cell.y === gridSize-1)
+
+    let returnObj = {
+        cell,
+        direction
+    };
+};
+
+const drawNewLine = () => {
+
+    
+    let drawCell = getCell(0,0);
+    
     ctx.beginPath();
-    ctx.moveTo(startX, startY);
-    ctx.lineTo(endX, endY);
+    while (drawCell >=0) {
+
+        let startPosition
+        
+        drawLineSegment(drawCell);
+        let nextDirection = 
+        drawCell = getAdjacentCell(drawCell, nextDirection);
+    }
 
     // stroke with a background colour
     ctx.strokeStyle = fillColour;
@@ -122,13 +169,19 @@ const drawToCanvas = (ctx, width, height, settings) => {
 
     ctx.closePath();
     ctx.stroke();
-
-};
-
-const startNewLine = (startCell) => {
     let startingCell = getEntryPoint();
-
+    let nextDirection = getRandomDirection();
+    console.log(`next direction = ${nextDirection}`);
+    
+    let [startX, startY] = getDrawPosFromCell(startCell, 'top');
+    let [endX, endY] = getDrawPosFromCell(endCell, 'bottom');
+    
+    
 };
+
+const drawLineSegment = (start, end) => {
+
+}
 
 
 /**
@@ -159,7 +212,7 @@ const getPossibleSegments = (cell) => {
 /**
  *  Applies a direction to the coordinates, returning the adjusted coordinates within an array [x, y]
  */ 
-const applyDirectionToCoords = (x, y, direction) => {
+const applyDirectionToCellIndex = (x, y, direction) => {
     switch(direction) {
         case 'top':
             return [x, y-1];
@@ -180,8 +233,14 @@ const applyDirectionToCoords = (x, y, direction) => {
  * @param {String} direction - 'top', 'right', 'down' or 'left'
  */
 const getAdjacentCell = (cell, direction) => {
-    let [adjustedX, adjustedY] = applyDirectionToCoords(cell.x, cell.y, direction);
+    let [adjustedX, adjustedY] = applyDirectionToCellIndex(cell.x, cell.y, direction);
     return getCell(adjustedX, adjustedY);
+};
+
+const getRandomDirection = (exclude) => {
+    //TODO: add weighted random to some directions
+
+    return ['top', 'right', 'bottom', 'left'][Math.floor(Math.random()*5)];
 };
 
 const getEntryPoint = () => {
@@ -217,9 +276,38 @@ const getDrawPosFromCell = (cell, position) => {
     let x = cell.x/gridSize;
     let y = cell.y/gridSize;
 
+    
     // convert to canvas based positioning
     x = lerp(canvasMargin, canvasWidth, x);
     y = lerp(canvasMargin, canvasHeight, y);
+    
+    // find out the exact size of each square, after removing the side margins
+    let drawAreaSize = (canvasWidth-(canvasMargin*2));
+    const cellSize = drawAreaSize/gridSize;
+    
+    console.log(`drawAreaSize is ${drawAreaSize} and cells are ${cellSize}`);
+
+    // adjust the pixel coordinates to be at the requested position
+
+    switch(position) {
+        case 'top':
+            x += cellSize/2;
+            break;
+        case 'right':
+            x += cellSize;
+            y += cellSize/2;
+            break;
+        case 'bottom':
+            x += cellSize/2;
+            y += cellSize;
+            break;
+        case 'left':
+            y += cellSize/2;
+            break;
+        default:
+            console.warn('no direction provided to get draw position');
+            break;
+    }
 
     return [x, y];
 }
