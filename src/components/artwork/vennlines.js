@@ -8,10 +8,11 @@ let gridSize = 0;
 let canvasWidth = 0;
 let canvasHeight = 0;
 let canvasMargin = 0;
+let ctx;
 
 // initial default values, but may be overridden by user selected options
 let configOptions = {
-    gridSize: 6,
+    gridSize: 3,
     lineWidth: 10,
     seed: random.getRandomSeed()
 };
@@ -114,100 +115,86 @@ const createGrid = (gridSize) => {
     return cells;
 };
 
-const drawToCanvas = (ctx, width, height, settings) => {
+const drawToCanvas = (canvasCtx, width, height, settings) => {
 
     // reassign global vars each redraw
+    ctx = canvasCtx;
     gridSize = settings.gridSize;
     cellGrid = createGrid(gridSize);
     canvasWidth = width;
     canvasHeight = height;
-    
-    console.log(cellGrid);
-    canvasMargin = width * 0.05;
+    canvasMargin =  0; //width * 0.05;
 
-    // pick one random colour from the array of colours
-    const fillColour = random.pick(random.pick(palettes));
+    let fillColour = random.pick(random.pick(palettes));
 
-    
+
+    let edgeCell = getFreeEdgeCell();
+
+    while (edgeCell) {
+        drawNewLine(edgeCell, {...settings, fillColour});
+        edgeCell = getFreeEdgeCell();
+    }
 };
 
 const getFreeEdgeCell = () => {
-    let cell = random.pick(cellGrid.flat());
-    let direction;
+    // pick a random cell from the cellgrid where the cell is touching an edge
+    let cell = random.pick(cellGrid.flat().filter(cell => cell.edge));
+ 
+    // when no edge pieces remain, stop create new lines
+    if (!cell) {
+        return false;
+    }
+    
+    // prevent this square from being used an an edge again
+    cell.edge = false; 
 
-    // find out which side if the cell is touching an edge
-    if (cell.y === 0) {
-        direction = 'left';
-    } else if (cell.y === gridSize-1)
-
-    let returnObj = {
-        cell,
-        direction
-    };
+    return cell;
 };
 
-const drawNewLine = () => {
+const drawNewLine = (edgeCell, settings) => {
+    
+    let fromSide = edgeCell.touching;
 
-    
-    let drawCell = getCell(0,0);
-    
+    drawNextSegment(edgeCell, edgeCell.touching, settings);
+
+};
+
+const drawNextSegment = (startCell, fromSide, settings) => {
     ctx.beginPath();
-    while (drawCell >=0) {
 
-        let startPosition
-        
-        drawLineSegment(drawCell);
-        let nextDirection = 
-        drawCell = getAdjacentCell(drawCell, nextDirection);
+    // each section of a line targets an adjacent segment
+    let {adjacentCell, direction} = getFreeAdjacentCell(startCell);
+
+    // the direction which the line will enter the adjacent cell from
+    let adjacentDirection = getOppositeDirection(direction);
+    if (!adjacentCell) {
+        return false;
     }
 
+    // mark these two connecting sides as used
+    startCell[direction] = true;
+    adjacentCell[adjacentDirection] = true;
+
+    let [startX, startY] = getDrawPosFromCell(startCell, fromSide);
+    let [endX, endY] = getDrawPosFromCell(adjacentCell, adjacentDirection);
+
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(endX, endY);
+
     // stroke with a background colour
-    ctx.strokeStyle = fillColour;
+    ctx.strokeStyle = settings.fillColour;
     ctx.lineWidth = settings.lineWidth;
     ctx.fillStyle = settings.color;
     ctx.fill();
 
     ctx.closePath();
     ctx.stroke();
-    let startingCell = getEntryPoint();
-    let nextDirection = getRandomDirection();
-    console.log(`next direction = ${nextDirection}`);
-    
-    let [startX, startY] = getDrawPosFromCell(startCell, 'top');
-    let [endX, endY] = getDrawPosFromCell(endCell, 'bottom');
-    
+
+    // returns the previously used cell, for the next line to use as a base point
+    drawNextSegment(adjacentCell, adjacentDirection, settings);
     
 };
 
-const drawLineSegment = (start, end) => {
-
-}
-
-
-/**
- * This function returns an Array of the available moves within the provided cell coordinates
- * 
- * @param {Number} x - the x coordinate of the current cell
- * @param {*} y - the y coordinate of the current cell
- */
-const getPossibleSegments = (cell) => {
-    // self
-    // x,y
-
-    // above
-    //x, y-1
-
-    // right
-    //x+1, y
-
-    // below
-    // x, y+1
-
-    // left
-    // x-1, y
-
-    return 
-};
 
 /**
  *  Applies a direction to the coordinates, returning the adjusted coordinates within an array [x, y]
@@ -237,14 +224,56 @@ const getAdjacentCell = (cell, direction) => {
     return getCell(adjustedX, adjustedY);
 };
 
+const getFreeAdjacentCell = (cell, exclude) => {
+    let directions = ['top', 'right', 'bottom', 'left'];
+    directions.filter(direction => direction !== exclude);
+    directions = random.shuffle(directions);
+
+    while (directions.length > 0) {
+        let nextDirection = directions.pop();
+        // the direction that the adjacent cell will be entered from is needed to check for a free entry direction
+        let originDirection = getOppositeDirection(nextDirection);
+
+        let adjacentCell = getAdjacentCell(cell, nextDirection);
+
+        // if undefined, then this is an index which is off the edge of the grid
+        if (!adjacentCell) {
+            continue;
+        }
+
+        // if a non-used side of an adjacent cell is found, return it
+        if (adjacentCell[originDirection] === false) {
+            return {
+                adjacentCell, 
+                direction: nextDirection
+            };
+        }
+    }
+
+    // if this is reached, then there are no more adjacent cells free
+    return false;
+    
+}
+
+const getOppositeDirection = (direction) => {
+    switch(direction) {
+        case 'top':
+            return 'bottom';
+        case 'right':
+            return 'left';
+        case 'bottom':
+            return 'top';
+        case 'left':
+            return 'right';
+        default:
+            console.error("no direction provided");
+    }
+}
+
 const getRandomDirection = (exclude) => {
     //TODO: add weighted random to some directions
 
     return ['top', 'right', 'bottom', 'left'][Math.floor(Math.random()*5)];
-};
-
-const getEntryPoint = () => {
-
 };
 
 /**
@@ -285,10 +314,7 @@ const getDrawPosFromCell = (cell, position) => {
     let drawAreaSize = (canvasWidth-(canvasMargin*2));
     const cellSize = drawAreaSize/gridSize;
     
-    console.log(`drawAreaSize is ${drawAreaSize} and cells are ${cellSize}`);
-
     // adjust the pixel coordinates to be at the requested position
-
     switch(position) {
         case 'top':
             x += cellSize/2;
