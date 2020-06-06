@@ -12,7 +12,7 @@ let ctx;
 
 // initial default values, but may be overridden by user selected options
 let configOptions = {
-    gridSize: 3,
+    gridSize: 18,
     lineWidth: 10,
     seed: random.getRandomSeed()
 };
