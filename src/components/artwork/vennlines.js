@@ -2,6 +2,13 @@ const { lerp } = require('canvas-sketch-util/math');
 const random = require('canvas-sketch-util/random');
 const palettes = require('nice-color-palettes');
 
+// initialise the empty grid of cells 
+let cellGrid = [];
+let gridSize = 0;
+let canvasWidth = 0;
+let canvasHeight = 0;
+let canvasMargin = 0;
+
 // initial default values, but may be overridden by user selected options
 let configOptions = {
     gridSize: 6,
@@ -58,19 +65,24 @@ const createGrid = (gridSize) => {
     const cells = [];
     const count = gridSize;
 
+    let rows = [];
+    let columns = [];
+
+
     // create an equal x/y grid
     for (let row = 0; row < count; row++) {
+        cells[row] = [];
         for (let col = 0; col < count; col++) {
 
             // add initial object to each grid cell, representing which sides are untouched
-            cells.push({
-                x: row,
-                y: col,
+            cells[row][col] = {
+                x: col,
+                y: row,
                 top: false,
                 right: false,
                 bottom: false,
                 left: false
-            });
+            };
 
         }
     }
@@ -80,20 +92,27 @@ const createGrid = (gridSize) => {
 
 const drawToCanvas = (ctx, width, height, settings) => {
 
-    let cellGrid = createGrid(settings.gridSize);
-    console.log('grid is');
+    // reassign global vars each redraw
+    gridSize = settings.gridSize;
+    cellGrid = createGrid(gridSize);
+    canvasWidth = width;
+    canvasHeight = height;
+    
     console.log(cellGrid)
-    const margin = 0; // width * 0.05;
+    canvasMargin = width * 0.05;
 
+    let startCell = getCell(4,4);
+    let endCell = getCell(2,4);
+
+    let [startX, startY] = getDrawPosFromCell(startCell, 'left');
+    let [endX, endY] = getDrawPosFromCell(endCell, 'top');
+    
     // pick one random colour from the array of colours
     const fillColour = random.pick(random.pick(palettes));
 
-    let startX = lerp(margin, width - margin, 0.5);
-    let startY = lerp(margin, height - margin, 0.5);
-
     ctx.beginPath();
     ctx.moveTo(startX, startY);
-    ctx.lineTo(100, 200);
+    ctx.lineTo(endX, endY);
 
     // stroke with a background colour
     ctx.strokeStyle = fillColour;
@@ -174,9 +193,35 @@ const getEntryPoint = () => {
  * 
  * @param {Number} x - x grid position
  * @param {Number} y - y grid position
+ * 
+ * @returns {Object|Boolean} return the cell object if found, otherwise return false/undefined
  */
 const getCell = (x,y) => {
-
+    // detect cells which are outside of the range by returning false
+    if (!cellGrid[y]) {
+        return false;
+    }
+    
+    return cellGrid[y][x];
+    
 };
+
+/**
+ * 
+ * @param {Object} cell - the cell to get a position within 
+ * @param {*} position - the exact position within the cell to use
+ * 
+ * @returns {Array} the x+y coordinates referring to the cell and position requested
+ */
+const getDrawPosFromCell = (cell, position) => {
+    let x = cell.x/gridSize;
+    let y = cell.y/gridSize;
+
+    // convert to canvas based positioning
+    x = lerp(canvasMargin, canvasWidth, x);
+    y = lerp(canvasMargin, canvasHeight, y);
+
+    return [x, y];
+}
 
 export default Vennlines;
