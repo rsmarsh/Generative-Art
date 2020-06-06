@@ -47,8 +47,6 @@ const Vennlines = (ctx, width, height, addSettings, customSettings = {}) => {
     
     random.setSeed(configOptions.seed);
     
-    const palette = random.shuffle(random.pick(palettes));
-
     // merge in and overwrite any default settings with the user defined settings
     let artSettings = {...configOptions, ...customSettings};
     drawToCanvas(ctx, width, height, artSettings);
@@ -66,9 +64,6 @@ const createSettings = (addSettings) => {
 const createGrid = (gridSize) => {
     const cells = [];
     const count = gridSize;
-
-    let rows = [];
-    let columns = [];
 
     // so that cells can be identified as touching the edge
     const edge = count-1;
@@ -152,11 +147,7 @@ const getFreeEdgeCell = () => {
 };
 
 const drawNewLine = (edgeCell, settings) => {
-    
-    let fromSide = edgeCell.touching;
-
     drawNextSegment(edgeCell, edgeCell.touching, settings);
-
 };
 
 const drawNextSegment = (startCell, fromSide, settings) => {
@@ -269,12 +260,6 @@ const getOppositeDirection = (direction) => {
             console.error("no direction provided");
     }
 }
-
-const getRandomDirection = (exclude) => {
-    //TODO: add weighted random to some directions
-
-    return ['top', 'right', 'bottom', 'left'][Math.floor(Math.random()*5)];
-};
 
 /**
  * Gets a single cell object at the provided position
