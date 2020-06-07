@@ -147,15 +147,16 @@ const drawToCanvas = (canvasCtx, width, height, settings) => {
    
 
     let singlePalette = random.pick(JSON.parse(JSON.stringify(palettes)));
-    let fillColour = random.pick([...singlePalette]);
-
+    
     let backgroundColor = '#fff';
-
+    
     console.log(singlePalette);
     if (settings.colouredBackground) {
         // pop this so that a line does not end up using the same as a background colour
         backgroundColor = singlePalette.pop();
     } 
+    
+    let fillColour = random.pick([...singlePalette]);
     
     // clear the canvas
     ctx.fillStyle = backgroundColor;
