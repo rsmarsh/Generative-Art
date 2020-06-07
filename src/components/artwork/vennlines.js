@@ -183,37 +183,79 @@ const getFreeEdgeCell = () => {
     return cell;
 };
 
-const drawNewLine = (edgeCell, settings) => {
-    ctx.beginPath();
-    drawNextSegment(edgeCell, edgeCell.touching, true, settings);
+const drawNewLine = (nextCell, settings) => {
+    let lineLength = 0;
+    let firstCell = true;
+    let fromSide = nextCell.touching
 
+    ctx.beginPath();
+    console.log(`${nextCell.x} / ${nextCell.y}`);
+
+    while (nextCell) {
+        // an adjacent cell andnext direction is returned if available
+        let {adjacentCell, adjacentDirection} = drawNextSegment(nextCell, fromSide, firstCell);
+        
+        nextCell = adjacentCell;
+        fromSide = adjacentDirection;
+
+        firstCell = false;
+        lineLength +=1;
+    }
+
+    console.log(`drew a line with ${lineLength} sections`);
     // stroke with a background colour
     ctx.strokeStyle = settings.fillColour;
     ctx.lineWidth = settings.lineWidth;
     ctx.fillStyle = settings.color;
 
-    ctx.stroke();
+    if (lineLength > 0) {
+        ctx.stroke();
+    } else {
+        console.log("not drawing it");
+    }
 
 };
 
-const drawNextSegment = (startCell, fromSide, isFirstSegment, settings) => {
-    
-
+const drawNextSegment = (startCell, fromSide, isFirstSegment) => {
+    let finalSegment = false;
+    let finalCell;
+    let finalDirection;
     // each section of a line targets an adjacent segment
     let {adjacentCell, direction} = getFreeAdjacentCell(startCell);
-
-    // the direction which the line will enter the adjacent cell from
-    let adjacentDirection = getOppositeDirection(direction);
-    if (!adjacentCell) {
-        return false;
-    }
-
+    let adjacentDirection;
+    
     // mark these two connecting sides as used
     startCell[direction] = true;
-    adjacentCell[adjacentDirection] = true;
 
+    // the end has been reached and no available adjacent cells exist, however there may be one left within this cell before ending
+    if (!adjacentCell) {
+        finalSegment = true;
+
+        // if the first segment is also the last, we need to explicitly mark the entry point as used
+        if (isFirstSegment) {
+            startCell[fromSide] = true;
+        }
+        let freeSide = getFreeSide(startCell);
+        
+        if (!freeSide) {
+            return false;
+        }
+
+        finalCell = startCell;
+        finalDirection = freeSide;
+    }
+
+   
+    if (!finalSegment) {
+        // the direction which the line will enter the adjacent cell from
+        adjacentDirection = getOppositeDirection(direction);
+        adjacentCell[adjacentDirection] = true;
+        
+    }
+
+    
     let [startX, startY] = getDrawPosFromCell(startCell, fromSide);
-    let [endX, endY] = getDrawPosFromCell(adjacentCell, adjacentDirection);
+    let [endX, endY] = getDrawPosFromCell(adjacentCell || finalCell, adjacentDirection || finalDirection);
 
     if (isFirstSegment) {
         ctx.moveTo(startX, startY);
@@ -221,11 +263,7 @@ const drawNextSegment = (startCell, fromSide, isFirstSegment, settings) => {
     }
     ctx.lineTo(endX, endY);
 
- 
-
-    // returns the previously used cell, for the next line to use as a base point
-    drawNextSegment(adjacentCell, adjacentDirection, isFirstSegment, settings);
-    
+    return {adjacentCell, adjacentDirection};
 };
 
 
@@ -256,6 +294,27 @@ const getAdjacentCell = (cell, direction) => {
     let [adjustedX, adjustedY] = applyDirectionToCellIndex(cell.x, cell.y, direction);
     return getCell(adjustedX, adjustedY);
 };
+
+/**
+ * 
+ * @param {Object} cell - the cell to find a free side within 
+ */
+const getFreeSide = (cell) => {
+    let directions = random.shuffle(['top', 'right', 'bottom', 'left']);
+
+    while (directions.length > 0) {
+        let randomDirection = directions.pop();
+
+        // one free side found
+        if (cell[randomDirection] === false) {
+            cell[randomDirection] = true;
+            return randomDirection;
+        }
+    }
+
+    // if no free sides were available
+    return false;
+}
 
 const getFreeAdjacentCell = (cell, exclude) => {
     let directions = ['top', 'right', 'bottom', 'left'];
@@ -320,6 +379,13 @@ const getCell = (x,y) => {
     return cellGrid[y][x];
     
 };
+
+const getCellSize = () => {
+       // find out the exact size of each square, after removing the side margins
+       const drawAreaSize = (canvasWidth-(canvasMargin*2));
+       const cellSize = drawAreaSize/gridSize;
+       return cellSize; 
+} 
 
 /**
  * 
