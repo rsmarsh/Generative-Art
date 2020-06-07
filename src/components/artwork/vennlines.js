@@ -147,11 +147,20 @@ const getFreeEdgeCell = () => {
 };
 
 const drawNewLine = (edgeCell, settings) => {
-    drawNextSegment(edgeCell, edgeCell.touching, settings);
+    ctx.beginPath();
+    drawNextSegment(edgeCell, edgeCell.touching, true, settings);
+
+    // stroke with a background colour
+    ctx.strokeStyle = settings.fillColour;
+    ctx.lineWidth = settings.lineWidth;
+    ctx.fillStyle = settings.color;
+
+    ctx.stroke();
+
 };
 
-const drawNextSegment = (startCell, fromSide, settings) => {
-    ctx.beginPath();
+const drawNextSegment = (startCell, fromSide, isFirstSegment, settings) => {
+    
 
     // each section of a line targets an adjacent segment
     let {adjacentCell, direction} = getFreeAdjacentCell(startCell);
@@ -169,20 +178,16 @@ const drawNextSegment = (startCell, fromSide, settings) => {
     let [startX, startY] = getDrawPosFromCell(startCell, fromSide);
     let [endX, endY] = getDrawPosFromCell(adjacentCell, adjacentDirection);
 
-    ctx.moveTo(startX, startY);
+    if (isFirstSegment) {
+        ctx.moveTo(startX, startY);
+        isFirstSegment = false;
+    }
     ctx.lineTo(endX, endY);
 
-    // stroke with a background colour
-    ctx.strokeStyle = settings.fillColour;
-    ctx.lineWidth = settings.lineWidth;
-    ctx.fillStyle = settings.color;
-    ctx.fill();
-
-    ctx.closePath();
-    ctx.stroke();
+ 
 
     // returns the previously used cell, for the next line to use as a base point
-    drawNextSegment(adjacentCell, adjacentDirection, settings);
+    drawNextSegment(adjacentCell, adjacentDirection, isFirstSegment, settings);
     
 };
 
