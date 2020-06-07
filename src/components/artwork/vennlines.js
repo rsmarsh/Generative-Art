@@ -47,7 +47,23 @@ const userOptions = [
         label: "Show Grid",
         property: "showGrid",
         default: false
+    },
+
+    {
+        type: "checkbox",
+        label: "Random Line Colours",
+        property: "randomLineColours",
+        default: false
+    },
+
+    {
+        type: "checkbox",
+        label: "Coloured Background",
+        property: "colouredBackground",
+        default: false
     }
+
+    // TODO: rounded corners checkbox
     
 ];
 
@@ -128,10 +144,23 @@ const drawToCanvas = (canvasCtx, width, height, settings) => {
     canvasWidth = width;
     canvasHeight = height;
     canvasMargin =  0; //width * 0.05;
-    
-    ctx.clearRect(0, 0, width, height);
+   
 
-    let fillColour = random.pick(random.pick(palettes));
+    let singlePalette = random.pick(JSON.parse(JSON.stringify(palettes)));
+    let fillColour = random.pick([...singlePalette]);
+
+    let backgroundColor = '#fff';
+
+    console.log(singlePalette);
+    if (settings.colouredBackground) {
+        // pop this so that a line does not end up using the same as a background colour
+        backgroundColor = singlePalette.pop();
+    } 
+    
+    // clear the canvas
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, width, height);
+
 
     if (settings.showGrid) {
         drawGrid();
@@ -140,6 +169,13 @@ const drawToCanvas = (canvasCtx, width, height, settings) => {
     let edgeCell = getFreeEdgeCell();
 
     while (edgeCell) {
+
+        // even though this might not be used, this saves the seed based randomness so that activating it keeps the same pattern
+        let randomLineColour = random.pick(singlePalette);
+        if (settings.randomLineColours) {
+            fillColour = randomLineColour;
+        }
+
         drawNewLine(edgeCell, {...settings, fillColour});
         edgeCell = getFreeEdgeCell();
     }
@@ -189,7 +225,6 @@ const drawNewLine = (nextCell, settings) => {
     let fromSide = nextCell.touching
 
     ctx.beginPath();
-    console.log(`${nextCell.x} / ${nextCell.y}`);
 
     while (nextCell) {
         // an adjacent cell andnext direction is returned if available
@@ -202,17 +237,12 @@ const drawNewLine = (nextCell, settings) => {
         lineLength +=1;
     }
 
-    console.log(`drew a line with ${lineLength} sections`);
     // stroke with a background colour
     ctx.strokeStyle = settings.fillColour;
     ctx.lineWidth = settings.lineWidth;
     ctx.fillStyle = settings.color;
 
-    if (lineLength > 0) {
-        ctx.stroke();
-    } else {
-        console.log("not drawing it");
-    }
+    ctx.stroke();
 
 };
 
