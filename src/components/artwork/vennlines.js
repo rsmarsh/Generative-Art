@@ -120,6 +120,9 @@ const drawToCanvas = (canvasCtx, width, height, settings) => {
     canvasHeight = height;
     canvasMargin =  0; //width * 0.05;
 
+    
+    ctx.clearRect(0, 0, width, height);
+
     let fillColour = random.pick(random.pick(palettes));
 
 
