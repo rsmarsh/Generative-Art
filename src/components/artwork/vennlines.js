@@ -15,7 +15,7 @@ let configOptions = {
     gridSize: 18,
     lineWidth: 10,
     seed: random.getRandomSeed(),
-    showGrid: false
+    lineOutlineSize: 5
 };
 
 // the customisable options available to the user to modify the output
@@ -46,7 +46,7 @@ const userOptions = [
         type: "checkbox",
         label: "Show Grid",
         property: "showGrid",
-        default: false
+        default: configOptions.showGrid
     },
 
     {
@@ -61,12 +61,24 @@ const userOptions = [
         label: "Coloured Background",
         property: "colouredBackground",
         default: false
+    },
+
+    {
+        type: "slider",
+        label: "Line Outline Size",
+        property: "lineOutlineSize",
+        default: configOptions.lineOutlineSize,
+        bounds: {
+            min: 0,
+            max: 30
+        }
     }
 
     // TODO: rounded corners checkbox
-    
+
 ];
 
+// TODO: Identify bug causing shared edges on large grids
 
 const Vennlines = (ctx, width, height, addSettings, customSettings = {}) => {
     
@@ -155,7 +167,7 @@ const drawToCanvas = (canvasCtx, width, height, settings) => {
         // pop this so that a line does not end up using the same as a background colour
         backgroundColor = singlePalette.pop();
     } 
-    
+
     let fillColour = random.pick([...singlePalette]);
     
     // clear the canvas
@@ -177,7 +189,7 @@ const drawToCanvas = (canvasCtx, width, height, settings) => {
             fillColour = randomLineColour;
         }
 
-        drawNewLine(edgeCell, {...settings, fillColour});
+        drawNewLine(edgeCell, {...settings, fillColour, backgroundColor});
         edgeCell = getFreeEdgeCell();
     }
 };
@@ -238,11 +250,17 @@ const drawNewLine = (nextCell, settings) => {
         lineLength +=1;
     }
 
-    // stroke with a background colour
+    // draw the line shadow with the background colour
+    if (settings.lineOutlineSize > 0) {
+        ctx.strokeStyle = settings.backgroundColor;
+        ctx.lineWidth = settings.lineWidth + (settings.lineOutlineSize);
+        ctx.stroke();
+    }
+
+    // stroke with the foreground line colour
     ctx.strokeStyle = settings.fillColour;
     ctx.lineWidth = settings.lineWidth;
     ctx.fillStyle = settings.color;
-
     ctx.stroke();
 
 };
