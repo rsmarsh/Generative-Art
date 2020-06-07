@@ -14,7 +14,8 @@ let ctx;
 let configOptions = {
     gridSize: 18,
     lineWidth: 10,
-    seed: random.getRandomSeed()
+    seed: random.getRandomSeed(),
+    showGrid: false
 };
 
 // the customisable options available to the user to modify the output
@@ -39,6 +40,14 @@ const userOptions = [
         property: "lineWidth",
         default: configOptions.lineWidth
     },
+
+    // whether a grid should be drawn on the canvas
+    {
+        type: "checkbox",
+        label: "Show Grid",
+        property: "showGrid",
+        default: false
+    }
     
 ];
 
@@ -46,6 +55,7 @@ const userOptions = [
 const Vennlines = (ctx, width, height, addSettings, customSettings = {}) => {
     
     random.setSeed(configOptions.seed);
+    console.log(`seed: ${random.getSeed()}`);
     
     // merge in and overwrite any default settings with the user defined settings
     let artSettings = {...configOptions, ...customSettings};
@@ -111,7 +121,6 @@ const createGrid = (gridSize) => {
 };
 
 const drawToCanvas = (canvasCtx, width, height, settings) => {
-
     // reassign global vars each redraw
     ctx = canvasCtx;
     gridSize = settings.gridSize;
@@ -119,12 +128,14 @@ const drawToCanvas = (canvasCtx, width, height, settings) => {
     canvasWidth = width;
     canvasHeight = height;
     canvasMargin =  0; //width * 0.05;
-
     
     ctx.clearRect(0, 0, width, height);
 
     let fillColour = random.pick(random.pick(palettes));
 
+    if (settings.showGrid) {
+        drawGrid();
+    }
 
     let edgeCell = getFreeEdgeCell();
 
@@ -132,6 +143,29 @@ const drawToCanvas = (canvasCtx, width, height, settings) => {
         drawNewLine(edgeCell, {...settings, fillColour});
         edgeCell = getFreeEdgeCell();
     }
+};
+
+const drawGrid = () => {
+    const cellSize = getCellSize();
+
+    ctx.beginPath();
+
+    ctx.lineWidth = "1";
+    ctx.strokeStyle = "black";
+
+    // vertical lines
+    for (let v = 0; v < gridSize; v++) {
+        ctx.moveTo(v*cellSize, 0);
+        ctx.lineTo(v*cellSize, canvasHeight);
+    }
+
+    // horizontal lines
+    for (let h = 0; h < gridSize; h++) {
+        ctx.moveTo(0, h*cellSize);
+        ctx.lineTo(canvasWidth, h*cellSize);
+    }
+
+    ctx.stroke();
 };
 
 const getFreeEdgeCell = () => {
