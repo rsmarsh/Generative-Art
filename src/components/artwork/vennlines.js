@@ -303,9 +303,7 @@ const getDrawPosFromCell = (cell, position) => {
     x = lerp(canvasMargin, canvasWidth, x);
     y = lerp(canvasMargin, canvasHeight, y);
     
-    // find out the exact size of each square, after removing the side margins
-    let drawAreaSize = (canvasWidth-(canvasMargin*2));
-    const cellSize = drawAreaSize/gridSize;
+    const cellSize = getCellSize();
     
     // adjust the pixel coordinates to be at the requested position
     switch(position) {
