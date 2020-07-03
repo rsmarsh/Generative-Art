@@ -233,7 +233,7 @@ const getFreeEdgeCell = () => {
 };
 
 const drawNewLine = (nextCell, settings) => {
-    let lineLength = 0;
+    //let lineLength = 0;
     let firstCell = true;
     let fromSide = nextCell.touching
 
