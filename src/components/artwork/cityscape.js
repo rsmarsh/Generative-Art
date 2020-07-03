@@ -61,12 +61,12 @@ const createSettings = (addSettings) => {
 };
 
 // receives an object containing the setting changed and its new value
-const updateSetting = (settingChange) => {
-    // merge the two to update the config object with the newly made change
-    configOptions = {configOptions, ...settingChange};
+// const updateSetting = (settingChange) => {
+//     // merge the two to update the config object with the newly made change
+//     configOptions = {configOptions, ...settingChange};
 
-    // TODO: clear canvas and redraw artwork with new settings
-};
+//     // TODO: clear canvas and redraw artwork with new settings
+// };
 
 // creates a grid of points which are used as anchor points for each shape
 const createGrid = (gridSize) => {
