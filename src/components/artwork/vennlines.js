@@ -247,7 +247,7 @@ const drawNewLine = (nextCell, settings) => {
         fromSide = adjacentDirection;
 
         firstCell = false;
-        lineLength +=1;
+        //lineLength +=1;
     }
 
     // draw the line shadow with the background colour
