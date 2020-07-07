@@ -233,21 +233,22 @@ const getFreeEdgeCell = () => {
 };
 
 const drawNewLine = (nextCell, settings) => {
-    //let lineLength = 0;
+    let lineLength = 0;
+    const maxLineLength = settings.maxLineLength || Infinity;
     let firstCell = true;
     let fromSide = nextCell.touching
 
     ctx.beginPath();
 
-    while (nextCell) {
+    while (nextCell && lineLength < maxLineLength) {
         // an adjacent cell andnext direction is returned if available
-        let {adjacentCell, adjacentDirection} = drawNextSegment(nextCell, fromSide, firstCell);
+        let {adjacentCell, adjacentDirection} = drawNextSegment(nextCell, fromSide, firstCell, settings.lineOptions);
         
         nextCell = adjacentCell;
         fromSide = adjacentDirection;
 
         firstCell = false;
-        //lineLength +=1;
+        lineLength +=1;
     }
 
     // draw the line shadow with the background colour
@@ -265,7 +266,7 @@ const drawNewLine = (nextCell, settings) => {
 
 };
 
-const drawNextSegment = (startCell, fromSide, isFirstSegment) => {
+const drawNextSegment = (startCell, fromSide, isFirstSegment, lineOptions = {}) => {
     let finalSegment = false;
     let finalCell;
     let finalDirection;
@@ -310,9 +311,83 @@ const drawNextSegment = (startCell, fromSide, isFirstSegment) => {
         ctx.moveTo(startX, startY);
         isFirstSegment = false;
     }
-    ctx.lineTo(endX, endY);
+    
+    // straight lines by default if not specified
+    const lineStyle = lineOptions.lineStyle || 'straight';
+
+    switch(lineStyle) {
+        case 'arc':
+            drawArcLine(
+                fromSide,
+                direction,
+                {x: startX, y: startY},
+                {x: endX, y: endY}
+            );
+            break;
+        case 'straight':
+        default:
+            ctx.lineTo(endX, endY);
+    }
 
     return {adjacentCell, adjacentDirection};
+};
+
+const drawArcLine = (fromSide, toSide, start, end) => {
+    // draw a typical straight line if this isn't a curved segment
+    if (fromSide === getOppositeDirection(toSide)) {
+        ctx.lineTo(end.x, end.y);
+        return;
+    }
+
+    let circleX;
+    let circleY;
+
+    let xDiff = end.x - start.x;
+    let yDiff = end.y - start.y;
+    
+    // long winded but readable way of determining which corner the circles center point needs to be in
+    // is the circle going to the right
+    if (xDiff > 0) {
+        if (toSide !== 'right') {
+            // then the curve is going from the left to the top or bottom       
+            // the circles X will be on the left of the cell
+            circleX = 0;
+        } else {
+            // the exit point is on the right
+            circleX = 1;
+        }
+    } else {
+        if (toSide !== 'left' ) {
+            // then the curve is going from the right to the top or bottom
+            // the circles X will be on the right of the cell
+            circleX = 1;
+        } else {
+            circleX = 0;
+        }
+    }
+
+    // heading from the top or middle downwards
+    if (yDiff > 0) {
+        if (toSide !== 'bottom') {
+            circleY = 0;
+        } else {
+            circleY = 1;
+        }
+    // heading from the bottom or middle upwards
+    } else {
+        if (toSide !== 'top') {
+            circleY = 1;
+        } else {
+            circleY = 0;
+        }
+    }
+    console.log(`${fromSide} to ${toSide}`);
+    console.log("circle pos:");
+    console.log([circleX, circleY]);
+    
+    let centerX = start.x - getCellSize();
+    let centerY = start.y - getCellSize();
+    
 };
 
 
