@@ -80,7 +80,7 @@ const userOptions = [
 
 // TODO: Identify bug causing shared edges on large grids
 
-const Vennlines = (ctx, width, height, addSettings, customSettings = {}) => {
+const TruchetLines = (ctx, width, height, addSettings, customSettings = {}) => {
     
     random.setSeed(configOptions.seed);
     console.log(`seed: ${random.getSeed()}`);
@@ -553,4 +553,4 @@ const getDrawPosFromCell = (cell, position) => {
     return [x, y];
 }
 
-export default Vennlines;
+export default TruchetLines;

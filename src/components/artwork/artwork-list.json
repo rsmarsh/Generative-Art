@@ -6,7 +6,7 @@
             "filename": "cityscape.js"
         },
         {
-            "title": "Venn Lines",
+            "title": "Truchet Lines",
             "description": "Overlapping lines which randomly move and turn in different directions on a grid.",
             "filename": "vennlines.js"
         }
