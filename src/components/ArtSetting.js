@@ -31,6 +31,9 @@ class ArtSetting extends React.Component {
             case 'number':
                 newValue = Number(e.target.value);
                 break;
+            case 'select-one':
+                newValue = e.target.value;
+                break;
             default:
                 return;
         }
@@ -56,6 +59,9 @@ class ArtSetting extends React.Component {
             case 'number':
             case 'text':
                 input = this.renderInput(setting);
+                break;
+            case 'select':
+                input = this.renderSelect(setting);
                 break;
             default:
                 return <p>invalid setting found</p>
@@ -119,6 +125,27 @@ class ArtSetting extends React.Component {
                 onChange={this.handleInputChange}
             />
         );
+    };
+
+    renderSelect = (setting) => {
+        return (
+            <select  
+                value={this.state.value}
+                onChange={this.handleInputChange} 
+            >
+                {this.renderOptions(setting.options)}
+            </select>
+        );
+    };
+
+    renderOptions = (options) => {
+        return options.map(option => {
+            return (
+                <option value={option.value} key={option.value}>
+                    {option.label}
+                </option>
+            );
+        });
     };
 
     renderButton = (setting) => {
