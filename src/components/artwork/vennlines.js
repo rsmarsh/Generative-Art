@@ -1,3 +1,11 @@
+// TODO:
+/*
+Notable seeds:
+ 181038 - grid size 2, the bottom left square has an overlapping entry point from the same line
+ 777450 - has some full grids on some sizes
+*/
+
+
 const { lerp } = require('canvas-sketch-util/math');
 const random = require('canvas-sketch-util/random');
 const palettes = require('nice-color-palettes');
@@ -12,10 +20,13 @@ let ctx;
 
 // initial default values, but may be overridden by user selected options
 let configOptions = {
-    gridSize: 18,
-    lineWidth: 10,
+    gridSize: 15,
+    lineWidth: 16,
+    lineStyle: 'arc',
     seed: random.getRandomSeed(),
-    lineOutlineSize: 5
+    lineOutlineSize: 10,
+    randomLineColours: true,
+    colouredBackground: true
 };
 
 // the customisable options available to the user to modify the output
@@ -49,18 +60,37 @@ const userOptions = [
         default: configOptions.showGrid
     },
 
+    // different visual styles for the lines
+    { 
+        type: "select",
+        label: "Line Type",
+        property: "lineStyle",
+        default: configOptions.lineStyle,
+        options: [
+            {
+                label: 'Straight',
+                value: 'straight'
+            },
+            {
+                label: 'Curved',
+                value: 'arc',
+                selected: true
+            }
+        ]
+    },
+
     {
         type: "checkbox",
         label: "Random Line Colours",
         property: "randomLineColours",
-        default: false
+        default: configOptions.randomLineColours
     },
 
     {
         type: "checkbox",
         label: "Coloured Background",
         property: "colouredBackground",
-        default: false
+        default: configOptions.randomLineColours
     },
 
     {
@@ -73,7 +103,7 @@ const userOptions = [
             max: 30
         }
     }
-
+ 
     // TODO: rounded corners checkbox
 
 ];
@@ -82,7 +112,7 @@ const userOptions = [
 
 const TruchetLines = (ctx, width, height, addSettings, customSettings = {}) => {
     
-    random.setSeed(configOptions.seed);
+    random.setSeed(181038);
     console.log(`seed: ${random.getSeed()}`);
     
     // merge in and overwrite any default settings with the user defined settings
@@ -162,7 +192,6 @@ const drawToCanvas = (canvasCtx, width, height, settings) => {
     
     let backgroundColor = '#fff';
     
-    console.log(singlePalette);
     if (settings.colouredBackground) {
         // pop this so that a line does not end up using the same as a background colour
         backgroundColor = singlePalette.pop();
@@ -242,31 +271,31 @@ const drawNewLine = (nextCell, settings) => {
 
     while (nextCell && lineLength < maxLineLength) {
         // an adjacent cell andnext direction is returned if available
-        let {adjacentCell, adjacentDirection} = drawNextSegment(nextCell, fromSide, firstCell, settings.lineOptions);
+        let {adjacentCell, adjacentDirection} = drawNextSegment(nextCell, fromSide, firstCell, settings.lineStyle);
         
         nextCell = adjacentCell;
         fromSide = adjacentDirection;
 
         firstCell = false;
         lineLength +=1;
+        
+            // draw the line shadow with the background colour
+            if (settings.lineOutlineSize > 0) {
+                ctx.strokeStyle = settings.backgroundColor;
+                ctx.lineWidth = settings.lineWidth + (settings.lineOutlineSize);
+                ctx.stroke();
+            }
+        
+            // stroke with the foreground line colour
+            ctx.strokeStyle = settings.fillColour;
+            ctx.lineWidth = settings.lineWidth;
+            ctx.fillStyle = settings.color;
+            ctx.stroke();
     }
-
-    // draw the line shadow with the background colour
-    if (settings.lineOutlineSize > 0) {
-        ctx.strokeStyle = settings.backgroundColor;
-        ctx.lineWidth = settings.lineWidth + (settings.lineOutlineSize);
-        ctx.stroke();
-    }
-
-    // stroke with the foreground line colour
-    ctx.strokeStyle = settings.fillColour;
-    ctx.lineWidth = settings.lineWidth;
-    ctx.fillStyle = settings.color;
-    ctx.stroke();
 
 };
 
-const drawNextSegment = (startCell, fromSide, isFirstSegment, lineOptions = {}) => {
+const drawNextSegment = (startCell, fromSide, isFirstSegment, lineStyle) => {
     let finalSegment = false;
     let finalCell;
     let finalDirection;
@@ -277,14 +306,15 @@ const drawNextSegment = (startCell, fromSide, isFirstSegment, lineOptions = {}) 
     // mark these two connecting sides as used
     startCell[direction] = true;
 
+    // if this is the first segment, we need to explicitly mark the entry point as used
+    if (isFirstSegment) {
+        startCell[fromSide] = true;
+    }
+
     // the end has been reached and no available adjacent cells exist, however there may be one left within this cell before ending
     if (!adjacentCell) {
         finalSegment = true;
 
-        // if the first segment is also the last, we need to explicitly mark the entry point as used
-        if (isFirstSegment) {
-            startCell[fromSide] = true;
-        }
         let freeSide = getFreeSide(startCell);
         
         if (!freeSide) {
@@ -303,7 +333,6 @@ const drawNextSegment = (startCell, fromSide, isFirstSegment, lineOptions = {}) 
         
     }
 
-    
     let [startX, startY] = getDrawPosFromCell(startCell, fromSide);
     let [endX, endY] = getDrawPosFromCell(adjacentCell || finalCell, adjacentDirection || finalDirection);
 
@@ -312,14 +341,12 @@ const drawNextSegment = (startCell, fromSide, isFirstSegment, lineOptions = {}) 
         isFirstSegment = false;
     }
     
-    // straight lines by default if not specified
-    const lineStyle = lineOptions.lineStyle || 'straight';
-
     switch(lineStyle) {
         case 'arc':
             drawArcLine(
+                startCell,
                 fromSide,
-                direction,
+                direction || finalDirection,
                 {x: startX, y: startY},
                 {x: endX, y: endY}
             );
@@ -332,9 +359,9 @@ const drawNextSegment = (startCell, fromSide, isFirstSegment, lineOptions = {}) 
     return {adjacentCell, adjacentDirection};
 };
 
-const drawArcLine = (fromSide, toSide, start, end) => {
+const drawArcLine = (cell, fromSide, toSide, start, end) => {
     // draw a typical straight line if this isn't a curved segment
-    if (fromSide === getOppositeDirection(toSide)) {
+    if (!toSide || fromSide === getOppositeDirection(toSide)) {
         ctx.lineTo(end.x, end.y);
         return;
     }
@@ -344,10 +371,14 @@ const drawArcLine = (fromSide, toSide, start, end) => {
 
     let xDiff = end.x - start.x;
     let yDiff = end.y - start.y;
-    
+
+    // required by the arc calculation function
+    let headingRight;
+
     // long winded but readable way of determining which corner the circles center point needs to be in
-    // is the circle going to the right
+    // is the arc going to the right
     if (xDiff > 0) {
+        headingRight = true;
         if (toSide !== 'right') {
             // then the curve is going from the left to the top or bottom       
             // the circles X will be on the left of the cell
@@ -381,14 +412,64 @@ const drawArcLine = (fromSide, toSide, start, end) => {
             circleY = 0;
         }
     }
-    console.log(`${fromSide} to ${toSide}`);
-    console.log("circle pos:");
-    console.log([circleX, circleY]);
+
+    const [cellX, cellY] = getDrawPosFromCell(cell);
+    const halfCellSize = getCellSize()/2;
+    const circleCenterX = circleX > 0.5 ? cellX + halfCellSize : cellX - halfCellSize;
+    const circleCenterY = circleY > 0.5 ? cellY + halfCellSize : cellY - halfCellSize;
+
+    // get which quater of the arc needs to be drawn within this cell
+    const [arcStart, arcEnd, antiClockwise] = convertCornersToAngle([circleX, circleY], headingRight);
+
+    //draw the circle at circleX/Y
     
-    let centerX = start.x - getCellSize();
-    let centerY = start.y - getCellSize();
+    ctx.arc(circleCenterX, circleCenterY, halfCellSize, arcStart, arcEnd, antiClockwise);
+    // ctx.moveTo(end.x, end.y);
     
 };
+
+const convertCornersToAngle = (pos, headingRight) => {
+    let start;
+    let end;
+    let antiClockwise = false;
+
+    // there are 4 different varieties of arrays which can be passed into here
+    // each one represents a different corner of a cell which needs to be converted into an start/end arc angle
+    if (!pos[0] && !pos[1]) {
+        // top left origin, bottom right arc needed
+        start = 0;
+        end = Math.PI*0.5;
+
+    } else if (pos[0] && !pos[1]) {
+        // top right origin, bottom left arc needed
+        start = Math.PI*0.5;
+        end = Math.PI;
+
+    } else if (pos[0] && pos[1]) {
+        // bottom right origin, top left arc needed
+        start = Math.PI*1.5;
+        end = Math.PI;
+        antiClockwise = true;
+
+    } else if (!pos[0] && pos[1]) {
+        // bottom left origin, top right arc needed
+        start = 0;
+        end = Math.PI*1.5;
+        antiClockwise = true;
+    }
+
+    // glad I thought of these before adding a load of conditionals
+    // if we are heading in the right direction, we need to flip the direction of the arc so that the pointer ends in the correct location
+    if (headingRight) {
+        let storeEnd = end;
+        end = start;
+        start = storeEnd;
+        antiClockwise = !antiClockwise;
+    }
+
+
+    return [start, end, antiClockwise];
+}
 
 
 /**
@@ -546,7 +627,9 @@ const getDrawPosFromCell = (cell, position) => {
             y += cellSize/2;
             break;
         default:
-            console.warn('no direction provided to get draw position');
+            // get the center position of the cell if no specific side provided
+            x += cellSize/2;
+            y += cellSize/2
             break;
     }
 
