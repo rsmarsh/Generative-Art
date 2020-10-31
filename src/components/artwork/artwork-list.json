@@ -4,6 +4,11 @@
             "title": "Cityscape",
             "description": "Randomly generated trapezoid of varying shapes and colours which form a city skyline looking scene.",
             "filename": "cityscape.js"
+        },
+        {
+            "title": "Truchet Lines",
+            "description": "Overlapping lines which randomly move and turn in different directions on a grid.",
+            "filename": "vennlines.js"
         }
     ]
 }

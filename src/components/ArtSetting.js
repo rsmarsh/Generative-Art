@@ -15,6 +15,7 @@ const ArtSetting = (props) => {
     );
 }
 
+
 const handleInputChange = (e, setting, hooks) => {
     let newValue;
 
@@ -28,10 +29,14 @@ const handleInputChange = (e, setting, hooks) => {
         case 'number':
             newValue = Number(e.target.value);
             break;
+        case 'select-one':
+            newValue = e.target.value;
+            break;
         default:
             return;
     }
 
+    
     // trigger a rerender with this inputs newest value
     hooks.setValue(newValue);
 
@@ -41,37 +46,41 @@ const handleInputChange = (e, setting, hooks) => {
 }
 
 const renderSetting = (setting, hooks) => {
-    let input;
+        let input;
+        
+        switch(setting.type) {
+            case 'checkbox':
+                input = renderCheckbox(setting, hooks);
+                break;
+            case 'slider': 
+                input = renderSlider(setting, hooks);
+                break;
+            case 'number':
+            case 'text':
+                input = renderInput(setting, hooks);
+                break;
+            case 'select':
+                input = renderSelect(setting, hooks);
+                break;
+            default:
+                return <p>invalid setting found</p>
+        }
+
+        // wrap the input in a label before returning
+        return (
+            <label className="artwork-setting">
+                {setting.label}:
+                {input}
+            </label>
+        );
+    };
     
-    switch(setting.type) {
-        case 'checkbox':
-            input = renderCheckbox(setting, hooks);
-            break;
-        case 'slider': 
-            input = renderSlider(setting, hooks);
-            break;
-        case 'number':
-        case 'text':
-            input = renderInput(setting, hooks);
-            break;
-        default:
-            return <p>invalid setting found</p>
-    }
-
-    // wrap the input in a label before returning
-    return (
-        <label className="artwork-setting">
-            {setting.label}:
-            {input}
-        </label>
-    );
-};
-
+ 
 const renderCheckbox = (setting, hooks) => {
     return (
         <input 
             type="checkbox" 
-            defaultChecked={setting.default}
+            defaultChecked={hooks.value}
             onChange={e => {handleInputChange(e, setting, hooks)}}
         />
     );
@@ -111,6 +120,27 @@ const renderInput = (setting, hooks) => {
             value={hooks.value} 
             onChange={e => {handleInputChange(e, setting, hooks)}}
         />
+    );
+};
+
+const renderOptions = (options) => {
+    return options.map(option => {
+        return (
+            <option value={option.value} key={option.value}>
+                {option.label}
+            </option>
+        );
+    });
+};
+
+const renderSelect = (setting, hooks) => {
+    return (
+        <select  
+            value={hooks.value}
+            onChange={e => {handleInputChange(e, setting, hooks)}} 
+        >
+            {renderOptions(setting.options)}
+        </select>
     );
 };
 
