@@ -1,130 +1,122 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './ArtSetting.css';
 
-class ArtSetting extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: props.setting.default
-        };
-    }
+let handleSettingChangeCallback;
 
-    // TODO: attach event listener to the setting to return changes back to the canvas
-    render() {
-        return (
-            this.renderSetting(this.props.setting)
-        );
-    }
+// TODO: attach event listener to the setting to return changes back to the canvas
+const ArtSetting = (props) => {
 
-    handleInputChange = (e) => {
-        const setting = this.props.property;
-        let newValue;
+    const [value, setValue] = useState(props.setting.default);
+    handleSettingChangeCallback = props.handleSettingChange;
 
-        switch(e.target.type){
-            case 'checkbox':
-                newValue = e.target.checked;
-                break;
-            case 'range':
-                newValue = Number(e.target.value);
-                break;
-            case 'number':
-                newValue = Number(e.target.value);
-                break;
-            default:
-                return;
-        }
+    return (
+        renderSetting(props.setting, {value, setValue})
+    );
+}
 
-        // trigger a rerender with this inputs newest value
-        this.setState({value: newValue});
+const handleInputChange = (e, setting, hooks) => {
+    let newValue;
 
-        // inform the ArtContainer that a setting has been changed
-        this.props.handleSettingChange(setting, newValue);
-
-    }
-
-    renderSetting = setting => {
-        let input;
-        
-        switch(setting.type) {
-            case 'checkbox':
-                input = this.renderCheckbox(setting);
-                break;
-            case 'slider': 
-                input = this.renderSlider(setting);
-                break;
-            case 'number':
-            case 'text':
-                input = this.renderInput(setting);
-                break;
-            default:
-                return <p>invalid setting found</p>
-        }
-
-        // wrap the input in a label before returning
-        return (
-            <label className="artwork-setting">
-                {setting.label}:
-                {input}
-            </label>
-        );
-    };
-    
-    renderCheckbox = (setting) => {
-        return (
-            <input 
-                type="checkbox" 
-                defaultChecked={this.state.value}
-                onChange={this.handleInputChange}
-            />
-        );
-    };
-    
-    renderSlider = (setting) => {
-
-        // don't allow a render with a value exceeding the min/max bounds
-        if (this.state.value < setting.bounds.min) {
-            this.setState({
-                value: setting.bounds.min
-            });
+    switch(e.target.type){
+        case 'checkbox':
+            newValue = e.target.checked;
+            break;
+        case 'range':
+            newValue = Number(e.target.value);
+            break;
+        case 'number':
+            newValue = Number(e.target.value);
+            break;
+        default:
             return;
-        }
-        if (this.state.value > setting.bounds.max) {
-            this.setState({
-                value: setting.bounds.max
-            });
-            return;
-        } 
+    }
 
-        return (
-            <div className="setting-group">
-                <input 
-                    type="range"
-                    min={setting.bounds.min} 
-                    max={setting.bounds.max} 
-                    value={this.state.value} 
-                    onChange={this.handleInputChange} 
-                    className="slider" 
-                />
-                <input type="number" value={this.state.value} onChange={this.handleInputChange} />
-            </div>
-        );
-    };
+    // trigger a rerender with this inputs newest value
+    hooks.setValue(newValue);
+
+    // inform the ArtContainer that a setting has been changed
+    handleSettingChangeCallback(setting.property, newValue);
+
+}
+
+const renderSetting = (setting, hooks) => {
+    let input;
     
-    renderInput = (setting) => {
-        return (
-            <input 
-                type={setting.type}
-                value={this.state.value} 
-                onChange={this.handleInputChange}
-            />
-        );
-    };
+    switch(setting.type) {
+        case 'checkbox':
+            input = renderCheckbox(setting, hooks);
+            break;
+        case 'slider': 
+            input = renderSlider(setting, hooks);
+            break;
+        case 'number':
+        case 'text':
+            input = renderInput(setting, hooks);
+            break;
+        default:
+            return <p>invalid setting found</p>
+    }
 
-    renderButton = (setting) => {
-        //TODO: add button functionality with a custom callback
-    };
-
+    // wrap the input in a label before returning
+    return (
+        <label className="artwork-setting">
+            {setting.label}:
+            {input}
+        </label>
+    );
 };
+
+const renderCheckbox = (setting, hooks) => {
+    return (
+        <input 
+            type="checkbox" 
+            defaultChecked={setting.default}
+            onChange={e => {handleInputChange(e, setting, hooks)}}
+        />
+    );
+};
+
+const renderSlider = (setting, hooks) => {
+
+    // don't allow a render with a value exceeding the min/max bounds
+    if (hooks.value < setting.bounds.min) {
+        hooks.setValue(setting.bounds.min);
+        return;
+    }
+    if (hooks.value > setting.bounds.max) {
+        hooks.setValue(setting.bounds.max);
+        return;
+    } 
+
+    return (
+        <div className="setting-group">
+            <input 
+                type="range"
+                min={setting.bounds.min} 
+                max={setting.bounds.max} 
+                value={hooks.value} 
+                onChange={e => {handleInputChange(e, setting, hooks)}}
+                className="slider" 
+            />
+            <input type="number" value={hooks.value} onChange={e => {handleInputChange(e, setting, hooks)}} />
+        </div>
+    );
+};
+
+const renderInput = (setting, hooks) => {
+    return (
+        <input 
+            type={setting.type}
+            value={hooks.value} 
+            onChange={e => {handleInputChange(e, setting, hooks)}}
+        />
+    );
+};
+
+const renderButton = (setting) => {
+    //TODO: add button functionality with a custom callback
+};
+
 
 export default ArtSetting;
