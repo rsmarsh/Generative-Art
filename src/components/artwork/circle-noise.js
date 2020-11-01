@@ -1,10 +1,10 @@
-// TODO:
-/*
-Notable seeds:
- 181038 - grid size 2, the bottom left square has an overlapping entry point from the same line
- 777450 - has some full grids on some sizes
+/* TODO: 
+* - Add rotation slider to the custom settings
+* - add height variance to the custom settings
+* - add multiple noise height levels support 
+* - add seed based randomness
+*
 */
-
 
 const { lerp } = require('canvas-sketch-util/math');
 const random = require('canvas-sketch-util/random');
@@ -15,9 +15,11 @@ let canvasHeight = 0;
 let canvasMargin = 0;
 let ctx;
 
+let noiseDirUp = true;
+
 // initial default values, but may be overridden by user selected options
 let configOptions = {
-    lineWidth: 16,
+    lineWidth: 1,
     seed: random.getRandomSeed(),
 };
 
@@ -28,9 +30,80 @@ const userOptions = [
 
 
 const drawToCanvas = (ctx, width, height, settings) => {
-
+    ctx.lineWidth = 2;
+    drawCircle(ctx, width/2, height/2);
 };
 
+const drawCircle = (ctx, centerX, centerY) => {
+    const centerPos = {x: centerX, y: centerY};
+    
+    const totalSteps = 400;
+    let arcTo = (2*Math.PI);
+    
+    let startArc = 0;
+    let endArc = (arcTo/totalSteps)*1;
+    
+    const noiseStepQuantity = 18; // this should be an even number to ensure the circle closes
+    const noiseSteps = generateNoiseSteps(noiseStepQuantity, totalSteps);
+    ctx.beginPath();
+
+    for (let i = 1; i <= totalSteps; i++) {
+        let start = startArc;
+        let end = endArc;
+        let nextDelay = (1000/100)*i;
+
+        
+        setTimeout(() => {
+            if (noiseSteps.includes(i)) {
+                drawLineNoise(centerPos);
+            } else {
+                drawNextStep(ctx, centerPos, start, end, i);
+                if (i === totalSteps) {
+                    ctx.closePath();
+                }
+            }
+        }, nextDelay);
+            
+        startArc = (arcTo/totalSteps)*i;
+        endArc = (arcTo/totalSteps)*(i+1);
+        // some cool effects:
+        // endArc = ((arcTo/totalSteps)*i)+(arcTo/(totalSteps/i));
+        // endArc = ((arcTo/totalSteps)*i)+1;
+    }
+}
+
+
+
+const drawNextStep = (ctx, centerPos, arcFrom, arcTo, step) => {
+    console.log(arcFrom, arcTo);
+    // ctx.arc(centerPos.x, centerPos.y, 200, arcFrom, arcTo); //for a normal circle
+    ctx.ellipse(centerPos.x, centerPos.y, 200, 100, 0, arcFrom, arcTo);
+    ctx.stroke();
+};
+
+const drawLineNoise = (centerPos) => {
+    if (noiseDirUp) {
+        centerPos.y = centerPos.y-50;
+    } else {
+        centerPos.y = centerPos.y+50;
+    }
+
+    // toggle it for the next time
+    noiseDirUp = !noiseDirUp;
+};
+
+const generateNoiseSteps = (quantity, steps) => {
+    let noiseArr = [];
+    while (noiseArr.length < quantity) {
+        noiseArr.push(Math.floor(Math.random()*steps));
+
+        // convert to a set and back to ensure no duplicates are added
+        noiseArr = [...new Set(noiseArr)];
+    }
+
+    return noiseArr;
+
+};
 
 const CircleNoise = (ctx, width, height, addSettings, customSettings = {}) => {
     

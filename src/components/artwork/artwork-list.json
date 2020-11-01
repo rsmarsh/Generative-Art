@@ -9,6 +9,11 @@
             "title": "Truchet Lines",
             "description": "Overlapping lines which randomly move and turn in different directions on a grid.",
             "filename": "vennlines.js"
+        },
+        {
+            "title": "Noise Circle",
+            "description": "A circle is drawn with added noise, creating a 3d effect",
+            "filename": "circle-noise.js"
         }
     ]
 }
