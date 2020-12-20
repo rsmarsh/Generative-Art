@@ -72,7 +72,7 @@ class ArtCanvas extends React.PureComponent {
     componentDidUpdate() {
         if (this.state.activeArtModule) {
             const canvasCtx = this.refs.artcanvas.getContext('2d'); 
-            this.state.activeArtModule(canvasCtx, this.state.dimension.width, this.state.dimension.height, this.props.addSettings, this.props.settingValues);
+            this.state.activeArtModule(canvasCtx, this.state.dimension.width, this.state.dimension.height, this.props.addSettings, this.props.settingValues, this.props.seed);
         }
 
     }

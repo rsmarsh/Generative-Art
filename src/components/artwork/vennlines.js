@@ -110,9 +110,9 @@ const userOptions = [
 
 // TODO: Identify bug causing shared edges on large grids
 
-const TruchetLines = (ctx, width, height, addSettings, customSettings = {}) => {
+const TruchetLines = (ctx, width, height, addSettings, customSettings = {}, seed) => {
     
-    random.setSeed(181038);
+    random.setSeed(seed);
     console.log(`seed: ${random.getSeed()}`);
     
     // merge in and overwrite any default settings with the user defined settings

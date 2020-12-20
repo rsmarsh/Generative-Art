@@ -140,13 +140,10 @@ const generateNoiseSteps = (quantity, steps) => {
     }
 
     return noiseArr;
-
 };
 
-const CircleNoise = (ctx, width, height, addSettings, customSettings = {}) => {
-    
-    random.setSeed(181038);
-    console.log(`seed: ${random.getSeed()}`);
+const CircleNoise = (ctx, width, height, addSettings, customSettings = {}, seed) => {
+    random.setSeed(seed);
     
     // merge in and overwrite any default settings with the user defined settings
     let artSettings = {...configOptions, ...customSettings};

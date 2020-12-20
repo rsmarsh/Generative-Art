@@ -6,7 +6,6 @@ const palettes = require('nice-color-palettes');
 let configOptions = {
     gridCount: 6,
     lineWidth: 20,
-    seed: random.getRandomSeed(),
     allowRectangles: false
 };
 
@@ -44,9 +43,8 @@ const userOptions = [
 ];
 
 
-const Cityscape = (ctx, width, height, addSettings, customSettings = {}) => {
-    
-    random.setSeed(configOptions.seed);
+const Cityscape = (ctx, width, height, addSettings, customSettings = {}, seed) => {
+    random.setSeed(seed);
     // merge in and overwrite any default settings with the user defined settings
     let artSettings = {...configOptions, ...customSettings};
     // TODO: clear canvas before redrawing
@@ -111,8 +109,6 @@ const drawToCanvas = (ctx, width, height, settings) => {
 
         let [u1, v1] = point1.position;
         let [u2, v2] = point2.position;
-
-        console.log(settings.preventRectangles);
 
         // don't allow x axis to be shared, or rectangles to form
         if (settings.allowRectangles === false && (u1 === u2 || v1 === v2)) {

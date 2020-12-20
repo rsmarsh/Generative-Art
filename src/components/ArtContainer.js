@@ -10,7 +10,8 @@ class ArtContainer extends React.Component {
 
         this.state = {
             settingList: [],
-            settingValues: {} // as custom changes are made using the settings, this object is populated
+            settingValues: {}, // as custom changes are made using the settings, this object is populated
+            seed: props.seed
         };
     }
 
@@ -64,6 +65,7 @@ class ArtContainer extends React.Component {
                     dimensional={this.props.match.params.dimensional} 
                     addSettings={this.addSettings}
                     settingValues={this.state.settingValues}
+                    seed={this.props.seed}
                 />
                 {this.renderSettings()}
             </div>
