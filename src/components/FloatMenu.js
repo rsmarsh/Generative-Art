@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import SeedContext from './App';
 
 const FloatMenu = (props) => {
-    console.log(SeedContext);
     return (
         <div className="float-menu">
             <div>
@@ -13,7 +12,9 @@ const FloatMenu = (props) => {
                     onChange={(e) => {props.handleSeedChange(e.target.value)}}
                 />
             </div>
-            <button><span role="img" aria-label="change seed">🌱</span></button>
+            <button
+                onClick={() => props.handleSeedChange(props.seed)}    
+            ><span role="img" aria-label="change seed">🌱</span></button>
         </div>
     )
 };
