@@ -4,7 +4,6 @@ import './ArtSetting.css';
 
 let handleSettingChangeCallback;
 
-// TODO: attach event listener to the setting to return changes back to the canvas
 const ArtSetting = (props) => {
 
     const [value, setValue] = useState(props.setting.default);
@@ -119,6 +118,7 @@ const renderInput = (setting, hooks) => {
             type={setting.type}
             value={hooks.value} 
             onChange={e => {handleInputChange(e, setting, hooks)}}
+            step={setting.step}
         />
     );
 };
