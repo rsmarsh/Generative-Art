@@ -13,14 +13,35 @@ let configOptions = {
     lineWidth: 2,
     radiusX: 200,
     radiusY: 30,
-    totalSteps: 400,
-    rotation: 0
+    totalSteps: 200,
+    rotation: 0,
+    noiseStepQuantity: 11
 };
 
 // the customisable options available to the user to modify the output
 const userOptions = [
 
-    // the x width of the circle
+    {
+        type: "slider",
+        label: "Rotation",
+        property: "rotation",
+        default: configOptions.rotation,
+        bounds: {
+            min: 0,
+            max: 180,
+        }
+    },
+    {
+        type: "number",
+        label: "Noise Quantity",
+        property: 'noiseStepQuantity',
+        default: configOptions.noiseStepQuantity,
+        step: 2,
+        bounds: {
+            min: 0,
+            max: 50
+        }
+    },
     {
         type: "slider",
         label: "X Radius",
@@ -40,27 +61,8 @@ const userOptions = [
             min: 1,
             max: 500,
         }
-    },
-    {
-        type: "slider",
-        label: "Rotation",
-        property: "rotation",
-        default: configOptions.rotation,
-        bounds: {
-            min: 0,
-            max: 180,
-        }
-    },
-    {
-        type: "slider",
-        label: "Number Of Edges",
-        property: "totalSteps",
-        default: configOptions.totalSteps,
-        bounds: {
-            min: 10,
-            max: 1000,
-        }
-    },
+    }
+    
 
 ];
 
@@ -76,23 +78,21 @@ const drawToCanvas = (ctx, width, height, settings) => {
 };
 
 const drawCircle = (ctx, centerX, centerY, settings) => {
-    console.log(centerY);
     const centerPos = {x: centerX, y: centerY};
+    noiseDirUp = true;
     
-    const totalSteps = settings.totalSteps;
+    const totalSteps = 300; // sets the amount of steps it takes to draw the circle, affects performance heavily
     let arcTo = (2*Math.PI);
     
     let startArc = 0;
     let endArc = (arcTo/totalSteps)*1;
     
-    const noiseStepQuantity = 18; // this should be an even number to ensure the circle closes
+    const noiseStepQuantity = settings.noiseStepQuantity; // this should be an even number to ensure the circle closes
     const noiseSteps = generateNoiseSteps(noiseStepQuantity, totalSteps);
 
     for (let i = 1; i <= totalSteps; i++) {
         let start = startArc;
         let end = endArc;
-        let nextDelay = (100/100)*i;
-
         
         if (noiseSteps.includes((i+settings.rotation))) {
             drawLineNoise(centerPos);
@@ -110,7 +110,6 @@ const drawCircle = (ctx, centerX, centerY, settings) => {
         // endArc = ((arcTo/totalSteps)*i)+1;
     }
 }
-
 
 
 const drawNextStep = (ctx, centerPos, arcFrom, arcTo, step, settings) => {
