@@ -16,8 +16,8 @@ class ArtCanvas extends React.PureComponent {
             filename: "",
             dimensional: props.dimensional, // typically "2d" or "3d"
             dimension: {
-                width: props.width || 800,
-                height: props.height || 800
+                width: props.width || Math.min(window.innerWidth*0.9, 800),
+                height: props.height || Math.min(window.innerWidth*0.9, 800)
             },
             scriptPath: '/artwork/',
             activeArtModule: null
