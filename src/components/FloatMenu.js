@@ -1,20 +1,37 @@
 import React, { useContext, useState } from 'react';
-import SeedContext from './App';
+import './FloatMenu.scss';
 
 const FloatMenu = (props) => {
+
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [seedInputValue, setSeedInputValue] = useState(props.seed || '');
+
     return (
-        <div className="float-menu">
-            <div>
-                <h2>Seed:</h2>
+        <div className={`float-menu  ${menuOpen ? 'menu-open' : 'menu-closed'}`}>
+            <div className="toggle-area">
                 <input 
                     type="text" 
-                    value={props.seed}
-                    onChange={(e) => {props.handleSeedChange(e.target.value)}}
+                    value={seedInputValue}
+                    className="seed-input"
+                    onChange={(e) => {setSeedInputValue(e.target.value.substring(0, 13).toUpperCase())}}
+                    spellCheck="false"
                 />
+                
+                <button
+                    onClick={() => props.handleSeedChange(seedInputValue)}
+                    disabled={seedInputValue === props.seed}
+                    className="update-seed"
+                >
+                    Update
+                </button>
             </div>
-            <button
-                onClick={() => props.handleSeedChange(props.seed)}    
-            ><span role="img" aria-label="change seed">🌱</span></button>
+
+            <div className="visible-area">
+                <button className="fold-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+                    <span role="img" aria-label="open seed menu">🌱</span>
+                </button>
+               
+            </div>
         </div>
     )
 };
