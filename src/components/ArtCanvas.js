@@ -1,5 +1,5 @@
 import React from 'react';
-
+import './ArtCanvas.scss';
 
 import artworkList from './artwork/artwork-list.json';
 
@@ -35,7 +35,15 @@ class ArtCanvas extends React.PureComponent {
             this.loadArtComponent(this.state.scriptPath + this.state.filename);
             return <h2>Loading canvas...</h2>;
         }
-        this.canvasRef = <canvas ref="artcanvas" width={this.state.dimension.width} height={this.state.dimension.height} />
+
+        this.canvasRef = 
+        <canvas 
+            ref="artcanvas"
+            className="art-canvas"
+            width={this.state.dimension.width}
+            height={this.state.dimension.height}
+        />
+        
         return this.canvasRef;
     }
 
