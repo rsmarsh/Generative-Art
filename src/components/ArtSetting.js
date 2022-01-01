@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import './ArtSetting.css';
+import './ArtSetting.scss';
 
 let handleSettingChangeCallback;
 
@@ -10,7 +10,9 @@ const ArtSetting = (props) => {
     handleSettingChangeCallback = props.handleSettingChange;
 
     return (
-        renderSetting(props.setting, {value, setValue})
+        <div className="art-setting">
+            {renderSetting(props.setting, {value, setValue})}
+        </div>
     );
 }
 

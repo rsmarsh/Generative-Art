@@ -14,7 +14,9 @@ input[type=range] {
 
 }
 
-input[type=text],
-input[type=number] {
-    max-width: 3rem;
+.art-setting {
+    input[type=text],
+    input[type=number] {
+        max-width: 3rem;
+    }
 }
