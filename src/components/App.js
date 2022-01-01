@@ -9,11 +9,10 @@ import './App.css';
 
 const App = () => {
 
-    const [seed, setSeed] = useState('Hello');
+    const [seed, setSeed] = useState('HELLO');
 
     return (
         <Router>
-            <FloatMenu seed={seed} handleSeedChange={setSeed} />
             <div>
                 <h1>Generative Art</h1>
             </div>
@@ -26,6 +25,7 @@ const App = () => {
                 {/* the artwork name and dimension (2d/3d) from the url is automatically passed to the component */}
                 <Route exact path="/art/:dimensional/:name">
                     <ArtContainer seed={seed} />
+                    <FloatMenu seed={seed} handleSeedChange={setSeed} />
                 </Route>
             </Switch>
         </Router>
