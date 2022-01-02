@@ -3,6 +3,8 @@ import ArtCanvas from './ArtCanvas';
 import ArtSetting from './ArtSetting';
 import { withRouter } from 'react-router-dom';
 
+import './ArtContainer.scss';
+
 class ArtContainer extends React.Component {
 
     constructor(props) {
@@ -17,13 +19,17 @@ class ArtContainer extends React.Component {
 
     // return a list of settings available for the currently open artwork 
     renderSettings() {
-        return this.state.settingList.map(setting => 
-            <ArtSetting 
-                key={setting.property} 
-                property={setting.property} 
-                setting={setting} 
-                handleSettingChange={this.handleSettingChange}
-            />
+        return (
+            <div className="art-settings">
+                {this.state.settingList.map(setting => 
+                    <ArtSetting
+                        key={setting.property}
+                        property={setting.property}
+                        setting={setting}
+                        handleSettingChange={this.handleSettingChange}
+                    />
+                )}
+            </div>
         );
     }
 
