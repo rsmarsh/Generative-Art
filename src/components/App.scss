@@ -27,6 +27,19 @@ body {
         transform: rotate(180deg);
         position: absolute;
         top: 50%;
+
+        @media screen and (max-width: 600px) {
+            position: fixed;
+            height: 33px;
+            top: 0;
+            left: .5rem;
+
+            img {
+                height: 30px;
+                width: 30px;
+            }
+
+        }
     }
 }
 
