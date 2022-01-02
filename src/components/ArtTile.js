@@ -1,31 +1,27 @@
 import React from 'react';
+import './ArtTile.scss';
 
-class ArtTile extends React.Component {
+const ArtTile = (props) => {
 
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+  return (
+    <a className="art-link" href={ props.path }>
+      <div className="art-tile">
+        <div className="preview">
+          <img src={props.image} alt={props.title} />
+        </div>
+        <div className="description">
+          <strong>
+            { props.title }
+          </strong>
+    
+          <p>
+            { props.description }
+          </p>
+        </div>
+      </div>
+    </a>
+  )
+}
 
-    getPath() {
-
-    }
-
-    render() {
-
-        return (
-            <a href={ this.props.path }>
-                <div>
-                    <strong>
-                        { this.props.title }
-                    </strong>
-                    <p>
-                        { this.props.description }
-                    </p>
-                </div>
-            </a>
-        )
-    }
-}   
 
 export default ArtTile;
