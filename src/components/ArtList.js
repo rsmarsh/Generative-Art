@@ -1,7 +1,9 @@
 import React from 'react';
 import ArtTile from './ArtTile';
-
+import './ArtList.scss';
 import artworkList from './artwork/artwork-list.json';
+
+const imagePath = '/art-images/';
 
 const getFilepath = (dimensional, name) => {
     if (dimensional === "2d") {
@@ -14,9 +16,28 @@ const getFilepath = (dimensional, name) => {
 }
 
 const renderTiles = () => {
-    return artworkList.twoDimensional.map(artwork => {
-        return <ArtTile title={artwork.title} description={artwork.description} path={getFilepath('2d', artwork.title)} key={artwork.title} />;
-    });
+    return (
+        <div>
+            <div className="art-category">
+                <h2>2D</h2>
+
+                {artworkList.twoDimensional.map(artwork => 
+                    <ArtTile
+                        title={artwork.title}
+                        description={artwork.description}
+                        path={getFilepath('2d', artwork.title)}
+                        image={imagePath+artwork.image}
+                        key={artwork.title}
+                    />
+                )}
+            </div>
+
+            <div className="art-category">
+                <h2>3D</h2>
+            </div>
+        </div>
+    
+    );
 }
 
 const ArtList = () => {
