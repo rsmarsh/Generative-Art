@@ -1,0 +1,35 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+
+    font-family: arial;
+}
+
+#root {
+    max-width: 100vw;
+    
+    @media screen and (min-width: 800px) {
+        min-width: 800px;
+    }
+            
+}
+
+.page-heading {
+    position: relative;
+
+    .back-button {
+        vertical-align: middle;
+        height: 50%;
+        transform: rotate(180deg);
+        position: absolute;
+        top: 50%;
+    }
+}
+
+.page-title {
+    text-align: center;
+}
