@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ArtList from './ArtList';
 import ArtContainer from './ArtContainer';
 import FloatMenu from './FloatMenu';
+import { getSeed, storeSeed } from '../data/session.js';
 
 import './App.css';
 
 
 const App = () => {
 
-    const [seed, setSeed] = useState('HELLO');
+    const [seed, setSeed] = useState(getSeed() || 'SEED');
+
+    // update the localStorage seed to retain across sessions/pages
+    useEffect(() => {
+        storeSeed(seed);
+    }, [seed]);
+
 
     return (
         <Router>
