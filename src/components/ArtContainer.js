@@ -21,6 +21,7 @@ class ArtContainer extends React.Component {
     renderSettings() {
         return (
             <div className="art-settings">
+                <p className="modifier-heading">Modifiers</p>
                 {this.state.settingList.map(setting => 
                     <ArtSetting
                         key={setting.property}

@@ -69,8 +69,8 @@ const renderSetting = (setting, hooks) => {
 
         // wrap the input in a label before returning
         return (
-            <label className="artwork-setting">
-                {setting.label}:
+            <label className="artwork-label">
+                <p className="setting-name">{setting.label}</p>
                 {input}
             </label>
         );
