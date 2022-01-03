@@ -9,6 +9,11 @@ class ArtCanvas extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const heightSpace = window.innerHeight*0.9;
+        const widthSpace = window.innerWidth*0.9;
+        const maxSize = 800;
+        const dimension = Math.min(heightSpace, widthSpace, maxSize);
+
         // get the requested artwork name from the url
         this.state = {
             title: props.name,
@@ -16,8 +21,8 @@ class ArtCanvas extends React.PureComponent {
             filename: "",
             dimensional: props.dimensional, // typically "2d" or "3d"
             dimension: {
-                width: props.width || Math.min(window.innerWidth*0.9, 800),
-                height: props.height || Math.min(window.innerWidth*0.9, 800)
+                width: dimension,
+                height: dimension
             },
             scriptPath: '/artwork/',
             activeArtModule: null
@@ -98,7 +103,7 @@ class ArtCanvas extends React.PureComponent {
     render() {
         return (
             // store a reference to this div within the class, to append the external script to
-            <div ref={el => (this.canvasDiv = el)}>
+            <div className="canvas-wrapper" ref={el => (this.canvasDiv = el)}>
                 <h2>
                     { this.state.title }
                 </h2>
