@@ -27,7 +27,7 @@ const userOptions = [
     // the thickness of the lines
     {
         type: "number",
-        label: "Line Width",
+        label: "Space between blocks",
         property: "lineWidth",
         default: configOptions.lineWidth
     },
