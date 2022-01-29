@@ -19,8 +19,9 @@ let ctx;
 
 // initial default values, but may be overridden by user selected options
 let configOptions = {
-  gridSize: 15,
-  lineWidth: 16,
+  shadowEffect: true,
+  gridSize: 12,
+  lineWidth: 18,
   lineStyle: 'arc',
   seed: random.getRandomSeed(),
   lineOutlineSize: 10,
@@ -48,6 +49,14 @@ const userOptions = [
     label: 'Line Width',
     property: 'lineWidth',
     default: configOptions.lineWidth
+  },
+
+  // whether to show shadows
+  {
+    type: 'checkbox',
+    label: 'Show Shadows (3D Effect)',
+    property: 'shadowEffect',
+    default: configOptions.shadowEffect
   },
 
   // whether a grid should be drawn on the canvas
@@ -281,11 +290,23 @@ const drawNewLine = (nextCell, settings) => {
       ctx.stroke();
     }
 
+    if (settings.shadowEffect) {
+      ctx.shadowColor = 'rgba(0, 0, 0, .25)';
+      ctx.shadowOffsetX = -4;
+      ctx.shadowOffsetY = 8;
+      ctx.shadowBlur = 10;
+    }
+
     // stroke with the foreground line colour
     ctx.strokeStyle = settings.fillColour;
     ctx.lineWidth = settings.lineWidth;
     ctx.fillStyle = settings.color;
     ctx.stroke();
+
+    // disable the shadow for the line outline
+    if (settings.shadowEffect) {
+      ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+    }
   }
 };
 
