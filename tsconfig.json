@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "baseUrl": ".",
+    "paths": {
+      "Components*": ["src/components*"],
+      "Assets*": ["src/assets*"]
+    },
+    "noImplicitAny": false, // ex-js project, so switched off until all components can be converted to tsx
+    "module": "ESNext",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "jsx": "react",
+    "types": ["webpack-env", "node", "jest"],
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true
+  }
+}
