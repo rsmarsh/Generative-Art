@@ -1,22 +1,22 @@
 {
-    "twoDimensional": [
-        {
-            "title": "Cityscape",
-            "description": "Randomly generated trapezoid of varying shapes and colours which form a city skyline looking scene.",
-            "filename": "cityscape.js",
-            "image": "cityscape.png"
-        },
-        {
-            "title": "Truchet Lines",
-            "description": "Overlapping lines which randomly move and turn in different directions on a grid.",
-            "filename": "vennlines.js",
-            "image": "truchet.png"
-        },
-        {
-            "title": "Noise Circle",
-            "description": "A circle is drawn with added noise, creating a 3d effect",
-            "filename": "circle-noise.js",
-            "image": "noise-circle.png"
-        }
-    ]
+  "twoDimensional": [
+    {
+      "title": "Cityscape",
+      "description": "Randomly generated trapezoid of varying shapes and colours which form a city skyline looking scene.",
+      "filename": "cityscape.js",
+      "image": "cityscape.png"
+    },
+    {
+      "title": "Truchet Lines",
+      "description": "Overlapping lines which randomly move and turn in different directions on a grid.",
+      "filename": "vennlines.js",
+      "image": "truchet.png"
+    },
+    {
+      "title": "Noise Circle",
+      "description": "A circle is drawn with added noise, creating a 3d effect",
+      "filename": "circle-noise.js",
+      "image": "noise-circle.png"
+    }
+  ]
 }

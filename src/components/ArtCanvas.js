@@ -5,112 +5,113 @@ import artworkList from './artwork/artwork-list.json';
 
 // PureComponent helps to prevent unnecessary renders using a shallow props check
 class ArtCanvas extends React.PureComponent {
+  constructor(props) {
+    super(props);
 
-    constructor(props) {
-        super(props);
+    const heightSpace = window.innerHeight * 0.9;
+    const widthSpace = window.innerWidth * 0.9;
+    const maxSize = 800;
+    const dimension = Math.min(heightSpace, widthSpace, maxSize);
 
-        const heightSpace = window.innerHeight*0.9;
-        const widthSpace = window.innerWidth*0.9;
-        const maxSize = 800;
-        const dimension = Math.min(heightSpace, widthSpace, maxSize);
+    // get the requested artwork name from the url
+    this.state = {
+      title: props.name,
+      descripton: '',
+      filename: '',
+      dimensional: props.dimensional, // typically "2d" or "3d"
+      dimension: {
+        width: dimension,
+        height: dimension
+      },
+      scriptPath: '/artwork/',
+      activeArtModule: null
+    };
+  }
 
-        // get the requested artwork name from the url
-        this.state = {
-            title: props.name,
-            descripton: "",
-            filename: "",
-            dimensional: props.dimensional, // typically "2d" or "3d"
-            dimension: {
-                width: dimension,
-                height: dimension
-            },
-            scriptPath: '/artwork/',
-            activeArtModule: null
-        };
+  renderCanvas() {
+    // only create a canvas when a matching artwork is found at this url
+    if (!this.state.filename) {
+      return <h2>Invalid artwork selected.</h2>;
     }
 
-    renderCanvas() {
-        // only create a canvas when a matching artwork is found at this url
-        if (!this.state.filename) {
-            return <h2>Invalid artwork selected.</h2>;
-        }
-
-        
-        if (!this.state.activeArtModule) {
-            this.loadArtComponent(this.state.scriptPath + this.state.filename);
-            return <h2>Loading canvas...</h2>;
-        }
-
-        this.canvasRef = 
-        <canvas 
-            ref="artcanvas"
-            className="art-canvas"
-            width={this.state.dimension.width}
-            height={this.state.dimension.height}
-        />
-        
-        return this.canvasRef;
+    if (!this.state.activeArtModule) {
+      this.loadArtComponent(this.state.scriptPath + this.state.filename);
+      return <h2>Loading canvas...</h2>;
     }
 
-    retrieveArtworkData(title) {
-        let dimensional;
-        if (this.state.dimensional === '2d') {
-            dimensional = 'twoDimensional';
-        } else if (this.state.dimensional === '3d') {
-            dimensional = 'threeDimensional';
-        }
-        
-        let artworkArray = artworkList[dimensional];
+    this.canvasRef = (
+      <canvas
+        ref='artcanvas'
+        className='art-canvas'
+        width={this.state.dimension.width}
+        height={this.state.dimension.height}
+      />
+    );
 
-        // check that the provided dimensional setting is valid
-        if (Array.isArray(artworkArray)) {
-            return artworkArray.find(art => art.title === title);
-        }
+    return this.canvasRef;
+  }
 
-        return false;
+  retrieveArtworkData(title) {
+    let dimensional;
+    if (this.state.dimensional === '2d') {
+      dimensional = 'twoDimensional';
+    } else if (this.state.dimensional === '3d') {
+      dimensional = 'threeDimensional';
     }
 
-    // initialise loading of external JS script
-    componentDidMount() {   
+    let artworkArray = artworkList[dimensional];
 
-        const artwork = this.retrieveArtworkData(this.state.title);
-        if (!artwork) {
-            return;
-        }
-
-        this.setState({...artwork}); 
-        
-    }
-    
-    componentDidUpdate() {
-        if (this.state.activeArtModule) {
-            const canvasCtx = this.refs.artcanvas.getContext('2d'); 
-            this.state.activeArtModule(canvasCtx, this.state.dimension.width, this.state.dimension.height, this.props.addSettings, this.props.settingValues, this.props.seed);
-        }
-
+    // check that the provided dimensional setting is valid
+    if (Array.isArray(artworkArray)) {
+      return artworkArray.find((art) => art.title === title);
     }
 
-    loadArtComponent = async (filepath) => {
-        // dynamically import the instruction for this artwork to render
-        const artComponent = await import(`.${filepath}`);
-        this.setState({
-            activeArtModule: artComponent.default
-        });
+    return false;
+  }
 
-        return;
+  // initialise loading of external JS script
+  componentDidMount() {
+    const artwork = this.retrieveArtworkData(this.state.title);
+    if (!artwork) {
+      return;
     }
 
-    render() {
-        return (
-            // store a reference to this div within the class, to append the external script to
-            <div className="canvas-wrapper" ref={el => (this.canvasDiv = el)}>
-                <h2>
-                    { this.state.title }
-                </h2>
-                { this.renderCanvas() }
-            </div>
-        );
+    this.setState({ ...artwork });
+  }
+
+  componentDidUpdate() {
+    if (this.state.activeArtModule) {
+      const canvasCtx = this.refs.artcanvas.getContext('2d');
+      this.state.activeArtModule(
+        canvasCtx,
+        this.state.dimension.width,
+        this.state.dimension.height,
+        this.props.addSettings,
+        this.props.settingValues,
+        this.props.seed
+      );
     }
+  }
+
+  loadArtComponent = async (filepath) => {
+    // dynamically import the instruction for this artwork to render
+    const artComponent = await import(`.${filepath}`);
+    this.setState({
+      activeArtModule: artComponent.default
+    });
+
+    return;
+  };
+
+  render() {
+    return (
+      // store a reference to this div within the class, to append the external script to
+      <div className='canvas-wrapper' ref={(el) => (this.canvasDiv = el)}>
+        <h2>{this.state.title}</h2>
+        {this.renderCanvas()}
+      </div>
+    );
+  }
 }
 
 export default ArtCanvas;

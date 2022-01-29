@@ -1,87 +1,82 @@
 $menu-size: 50px;
 
 .float-menu {
-    
-    display: flex;
-    overflow: hidden;
-    
-    position: fixed;
-    left: 0;
-    bottom: 5rem;
-    
-    border: 1px solid black;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-left-width: 0;
+  display: flex;
+  overflow: hidden;
 
-    transition-property: transform;
-    transition-duration: .25s;
-    transition-timing-function: ease-out;
-    
-    &.menu-open {
-        transform: translateX(0);
+  position: fixed;
+  left: 0;
+  bottom: 5rem;
 
+  border: 1px solid black;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-left-width: 0;
 
-        .fold-toggle {
-            transform: rotate(90deg);
-        }
+  transition-property: transform;
+  transition-duration: 0.25s;
+  transition-timing-function: ease-out;
+
+  &.menu-open {
+    transform: translateX(0);
+
+    .fold-toggle {
+      transform: rotate(90deg);
     }
+  }
 
-    &.menu-closed {
-        transform: translateX(calc(-100% + $menu-size));
+  &.menu-closed {
+    transform: translateX(calc(-100% + #{$menu-size}));
 
-        // when the toggle button would cover up the art, add some opacity
-        @media screen and (max-width: 900px) {
-            opacity: 0.5;
-            
-        }
+    // when the toggle button would cover up the art, add some opacity
+    @media screen and (max-width: 900px) {
+      opacity: 0.5;
     }
-
+  }
 }
 
 .visible-area {
-    width: $menu-size;
-    height: $menu-size;
+  width: $menu-size;
+  height: $menu-size;
 
-    button {
-        height: 100%;
-        width: 100%;
+  button {
+    height: 100%;
+    width: 100%;
 
-        background-color: #abffa6;
-        outline: none;
-        border-width: 0;
+    background-color: #abffa6;
+    outline: none;
+    border-width: 0;
 
-        cursor: pointer;
-    }
+    cursor: pointer;
+  }
 }
 
 .toggle-area {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 
+  .seed-input {
+    display: block;
+    width: 8rem;
+    text-align: center;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 16px;
+    border-width: 0;
 
-    .seed-input {
-        display: block;
-        width: 8rem;
-        text-align: center;
-        font-family: monospace;
-        font-weight: bold;
-        font-size: 16px;
-        border-width: 0;
-
-        &:focus-visible {
-            outline: none;
-        }
+    &:focus-visible {
+      outline: none;
     }
+  }
 
-    .update-seed {
-        outline: 0;
-        border: 1px solid #ddd;
-        background-color: white;
+  .update-seed {
+    outline: 0;
+    border: 1px solid #ddd;
+    background-color: white;
 
-        &:not([disabled]) {
-            cursor: pointer;
-        }
+    &:not([disabled]) {
+      cursor: pointer;
     }
+  }
 }

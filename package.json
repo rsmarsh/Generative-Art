@@ -6,6 +6,7 @@
   "scripts": {
     "dev server": "webpack serve --config ./webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
+    "prettier": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch"
   },

@@ -1,13 +1,13 @@
 export const getSeed = () => {
-    if (localStorage) {
-        return localStorage.getItem('seed');
-    }
+  if (localStorage) {
+    return localStorage.getItem('seed');
+  }
 
-    return;
+  return;
 };
 
 export const storeSeed = (seed) => {
-    if (localStorage) {
-        localStorage.setItem('seed', seed);
-    }
-}
+  if (localStorage) {
+    localStorage.setItem('seed', seed);
+  }
+};
