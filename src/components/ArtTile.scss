@@ -19,6 +19,8 @@
   flex-direction: row;
 
   .preview {
+    max-width: 150px;
+
     img {
       max-height: 100%;
     }
