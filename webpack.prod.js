@@ -10,6 +10,9 @@ module.exports = merge(commonConfig, {
       title: 'Project Starter',
       template: './src/index.html'
     }),
-    new CopyWebpackPlugin([{ from: 'static', to: 'dist' }])
+    new CopyWebpackPlugin({
+      // omit 'to' to copy into root
+      patterns: [{ from: 'static' }]
+    })
   ]
 });
