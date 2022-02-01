@@ -10,7 +10,7 @@ import ForwardIcon from 'Assets/icons/forward.svg';
 import './App.scss';
 
 const App = () => {
-  const [seed, setSeed] = useState(getSeed() || 'SEED');
+  const [seed, setSeed] = useState(getSeed() || 'WELCOME');
 
   // update the localStorage seed to retain across sessions/pages
   useEffect(() => {
