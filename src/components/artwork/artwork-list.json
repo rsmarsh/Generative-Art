@@ -18,5 +18,14 @@
       "filename": "circle-noise.js",
       "image": "noise-circle.png"
     }
+  ],
+
+  "threeDimensional": [
+    {
+      "title": "p5js",
+      "description": "A test of the p5.js library",
+      "filename": "p5-demo.js",
+      "image": "p5-demo.png"
+    }
   ]
 }

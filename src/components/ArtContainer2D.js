@@ -3,9 +3,9 @@ import ArtCanvas from './ArtCanvas';
 import ArtSetting from './ArtSetting';
 import { withRouter } from 'react-router-dom';
 
-import './ArtContainer.scss';
+import './ArtContainer2D.scss';
 
-class ArtContainer extends React.Component {
+class ArtContainer2D extends React.Component {
   constructor(props) {
     super(props);
 
@@ -75,4 +75,4 @@ class ArtContainer extends React.Component {
   }
 }
 
-export default withRouter(ArtContainer);
+export default withRouter(ArtContainer2D);

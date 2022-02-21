@@ -11,7 +11,7 @@ const getFilepath = (dimensional, name) => {
   }
 
   if (dimensional === '3d') {
-    //TODO: add 3d support
+    return `art/${dimensional}/${name}`;
   }
 };
 
@@ -34,6 +34,17 @@ const renderTiles = () => {
 
       <div className='art-category'>
         <h2>3D</h2>
+
+        {artworkList.threeDimensional.map((artwork) => (
+          <ArtTile
+            title={artwork.title}
+            description={artwork.description}
+            path={getFilepath('3d', artwork.title)}
+            image={imagePath + artwork.image}
+            key={artwork.title}
+          />
+        ))}
+
       </div>
     </div>
   );

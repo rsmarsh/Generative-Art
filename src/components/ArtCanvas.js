@@ -18,7 +18,7 @@ class ArtCanvas extends React.PureComponent {
       title: props.name,
       descripton: '',
       filename: '',
-      dimensional: props.dimensional, // typically "2d" or "3d"
+      dimensional: '2d',
       dimension: {
         width: dimension,
         height: dimension

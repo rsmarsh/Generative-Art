@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ArtList from './ArtList';
-import ArtContainer from 'Components/ArtContainer';
+import ArtContainer2D from 'Components/ArtContainer2D';
+import ArtContainer3D from 'Components/ArtContainer3D';
 import FloatMenu from 'Components/FloatMenu';
 import { getSeed, storeSeed } from '../data/session.js';
 
@@ -41,9 +42,15 @@ const App = () => {
         </Route>
 
         {/* the artwork name and dimension (2d/3d) from the url is automatically passed to the component */}
-        <Route exact path='/art/:dimensional/:name'>
+        <Route exact path='/art/2d/:name'>
           {renderHeading(true)}
-          <ArtContainer seed={seed} />
+          <ArtContainer2D seed={seed} />
+        </Route>
+
+        {/* the artwork name and dimension (2d/3d) from the url is automatically passed to the component */}
+        <Route exact path='/art/3d/:name'>
+          {renderHeading(true)}
+          <ArtContainer3D seed={seed} />
         </Route>
       </Switch>
     </Router>
