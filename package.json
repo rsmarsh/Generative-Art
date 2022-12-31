@@ -32,7 +32,7 @@
     "@types/webpack-env": "^1.16.2",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
-    "babel-loader": "^8.2.2",
+    "babel-loader": "^8.3.0",
     "canvas-sketch-util": "^1.10.0",
     "copy-webpack-plugin": "^10.2.3",
     "css-loader": "^6.2.0",
