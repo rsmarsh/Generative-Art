@@ -7,19 +7,7 @@ let movingRight = true;
 let movingDown = true;
 let isGrowing = true;
 
-interface Position {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-interface CanvasInfo {
-  width: number;
-  height: number;
-}
-
-const updateDirections = (pos: Position, canvas: CanvasInfo) => {
+const updateDirections = (pos, canvas) => {
   const xMaxBreached = pos.right > canvas.width;
   const xMinBreached = pos.left < 0;
 
@@ -39,14 +27,14 @@ const updateDirections = (pos: Position, canvas: CanvasInfo) => {
   }
 };
 
-const getNextXPos = (x: number) => {
+const getNextXPos = (x) => {
   return movingRight ? (x += 1) : (x -= 1);
 };
-const getNextYPos = (y: number) => {
+const getNextYPos = (y) => {
   return movingDown ? (y += 1) : (y -= 1);
 };
 
-const getNextRadius = (maxSize: number) => {
+const getNextRadius = (maxSize) => {
   // once max size is reached, start shrinking
   if (radius > maxSize) {
     isGrowing = false;
