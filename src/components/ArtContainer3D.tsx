@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
+import artworkList from './artwork/artwork-list.json';
 import P5Canvas from './P5Canvas';
 
 import './ArtContainer3D.scss';
@@ -48,6 +49,7 @@ const ArtContainer3D = (props: Props3D) => {
     <div className='canvas-wrapper'>
       {artLoading && <div>Loading...</div>}
       {threeDLibrary === 'p5js' && <P5Canvas seed={props.seed} draw={drawFunction} />}
+      {/* {threeDLibrary === 'threejs' && <ThreeJSCanvas draw={drawFunction} />} */}
     </div>
   );
 };
