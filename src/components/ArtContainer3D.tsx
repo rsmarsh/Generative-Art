@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import Sketch from 'react-p5';
-import p5Types from 'p5';
 import { withRouter } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
+import P5Canvas from './P5Canvas';
 
 import './ArtContainer3D.scss';
 
@@ -14,34 +13,40 @@ type Props3D = RouteComponentProps<PathParameters> & {
   seed: string;
 };
 
+type ThreeDLibraries = 'p5js' | 'threejs';
+
 const importArtInfo = async (name) => {
   const response = await import(`./artwork/${name}.ts`);
   return response;
 };
 
+// the function which executes the entire drawing
+type drawFunction = () => void;
+
+interface ArtInfo {
+  draw: () => drawFunction;
+  library: ThreeDLibraries;
+}
+
 const ArtContainer3D = (props: Props3D) => {
   const artName = props.match.params.name;
 
   const [artLoading, setArtLoading] = useState(true);
-  const [drawFunction, setDrawFunction] = useState();
+  const [drawFunction, setDrawFunction] = useState<drawFunction>();
+  const [threeDLibrary, setThreeDLibrary] = useState<ThreeDLibraries>();
 
-  importArtInfo(artName).then((artInfo) => {
-    const { draw } = artInfo;
+  importArtInfo(artName).then((artInfo: ArtInfo) => {
+    const { draw, library } = artInfo;
     setDrawFunction(() => draw);
     setArtLoading(false);
-  });
 
-  const setup = (p5, canvasParentRef: HTMLElement) => {
-    const width = canvasParentRef.parentElement.clientWidth;
-    const height = canvasParentRef.parentElement.clientWidth; // there will be no height yet, only width
-    p5.background(0);
-    return p5.createCanvas(width, height).parent(canvasParentRef);
-  };
+    setThreeDLibrary(library);
+  });
 
   return (
     <div className='canvas-wrapper'>
-      {!artLoading && <Sketch setup={setup} draw={drawFunction} />}
       {artLoading && <div>Loading...</div>}
+      {threeDLibrary === 'p5js' && <P5Canvas seed={props.seed} draw={drawFunction} />}
     </div>
   );
 };
