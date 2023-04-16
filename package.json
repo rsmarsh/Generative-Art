@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Portfolio displaying different projects",
   "entry": "/src/index.js",
+  "engines": {
+    "node": "18.16.0",
+    "npm": "9.5.1"
+  },
   "scripts": {
     "dev server": "webpack serve --config ./webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
