@@ -24,7 +24,7 @@
     {
       "title": "p5js",
       "description": "A test of the p5.js library",
-      "filename": "p5-demo.js",
+      "filename": "bouncing-ball.ts",
       "image": "p5-demo.png"
     }
   ]

@@ -118,7 +118,6 @@ const userOptions = [
 
 const TruchetLines = (ctx, width, height, addSettings, customSettings = {}, seed) => {
   random.setSeed(seed);
-  console.log(`seed: ${random.getSeed()}`);
 
   // merge in and overwrite any default settings with the user defined settings
   let artSettings = { ...configOptions, ...customSettings };
