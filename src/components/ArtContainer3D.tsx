@@ -16,7 +16,7 @@ type Props3D = RouteComponentProps<PathParameters> & {
 type ThreeDLibraries = 'p5js' | 'threejs';
 
 const importArtInfo = async (name) => {
-  const response = await import(`./artwork/${name}.ts`);
+  const response = await import(`./artwork/${name}`);
   return response;
 };
 
@@ -30,12 +30,13 @@ interface ArtInfo {
 
 const ArtContainer3D = (props: Props3D) => {
   const artName = props.match.params.name;
+  const artMeta = artworkList.threeDimensional.find((art) => art.title === artName);
 
   const [artLoading, setArtLoading] = useState(true);
   const [drawFunction, setDrawFunction] = useState<drawFunction>();
   const [threeDLibrary, setThreeDLibrary] = useState<ThreeDLibraries>();
 
-  importArtInfo(artName).then((artInfo: ArtInfo) => {
+  importArtInfo(artMeta.filename).then((artInfo: ArtInfo) => {
     const { draw, library } = artInfo;
     setDrawFunction(() => draw);
     setArtLoading(false);
