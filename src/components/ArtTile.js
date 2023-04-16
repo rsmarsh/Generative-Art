@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './ArtTile.scss';
 
 const ArtTile = (props) => {
   return (
-    <a className='art-link' href={props.path}>
+    <Link className='art-link' to={props.path}>
       <div className='art-tile'>
         <div className='preview'>
           <img src={props.image} alt={props.title} />
@@ -14,7 +15,7 @@ const ArtTile = (props) => {
           <p>{props.description}</p>
         </div>
       </div>
-    </a>
+    </Link>
   );
 };
 

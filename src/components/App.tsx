@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import ArtList from './ArtList';
 import ArtContainer2D from 'Components/ArtContainer2D';
 import ArtContainer3D from 'Components/ArtContainer3D';
@@ -22,9 +22,9 @@ const App = () => {
     return (
       <div className='page-heading'>
         {showBackButton && (
-          <a className='back-button' href='/'>
+          <Link className='back-button' to='/'>
             <ForwardIcon />
-          </a>
+          </Link>
         )}
         <h1 className='page-title'>Generative JavaScript Art</h1>
       </div>
