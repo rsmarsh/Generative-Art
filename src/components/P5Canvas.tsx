@@ -13,7 +13,7 @@ const P5Canvas = (props: Props3D) => {
     const width = canvasParentRef.parentElement.clientWidth;
     const height = canvasParentRef.parentElement.clientWidth; // there will be no height yet, only width
     p5.background(0);
-    return p5.createCanvas(width, height).parent(canvasParentRef);
+    return p5.createCanvas(width, height, p5.WEBGL).parent(canvasParentRef);
   };
 
   return (
