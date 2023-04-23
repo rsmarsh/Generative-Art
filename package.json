@@ -47,7 +47,7 @@
     "fork-ts-checker-webpack-plugin": "^6.5.0",
     "html-webpack-plugin": "^5.3.1",
     "jest": "^27.0.6",
-    "nice-color-palettes": "^3.0.0",
+    "nice-color-palettes": "^2.0.0",
     "p5": "^1.4.1",
     "prettier": "2.3.0",
     "react": "^17.0.2",
