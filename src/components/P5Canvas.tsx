@@ -1,10 +1,11 @@
 import React from 'react';
 import Sketch from 'react-p5';
 import './P5Canvas.scss';
+import { p5InstanceExtensions } from 'p5';
 
 type Props3D = {
   seed: string;
-  draw: () => void;
+  draw: (p5: p5InstanceExtensions, seed: string) => void;
 };
 
 const P5Canvas = (props: Props3D) => {
@@ -15,7 +16,14 @@ const P5Canvas = (props: Props3D) => {
     return p5.createCanvas(width, height).parent(canvasParentRef);
   };
 
-  return <Sketch setup={setup} draw={props.draw} />;
+  return (
+    <Sketch
+      setup={setup}
+      draw={(p5) => {
+        return props.draw(p5, props.seed);
+      }}
+    />
+  );
 };
 
 export default P5Canvas;
