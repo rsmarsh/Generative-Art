@@ -28,6 +28,7 @@ const renderTiles = () => {
             path={getFilepath('2d', artwork.title)}
             image={imagePath + artwork.image}
             key={artwork.title}
+            tags={artwork.tags}
           />
         ))}
       </div>
@@ -42,9 +43,9 @@ const renderTiles = () => {
             path={getFilepath('3d', artwork.title)}
             image={imagePath + artwork.image}
             key={artwork.title}
+            tags={artwork.tags}
           />
         ))}
-
       </div>
     </div>
   );

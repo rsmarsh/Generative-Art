@@ -6,10 +6,17 @@
     .description {
       border-bottom-width: 7px;
     }
+
+    .tag-list {
+      opacity: 1;
+      margin-left: 0;
+    }
   }
 }
 
 .art-tile {
+  position: relative;
+
   border: 1px solid #ccc;
   margin-bottom: 1rem;
 
@@ -23,21 +30,32 @@
 
     img {
       max-height: 100%;
+
+      // Prevents a visual judder while the image loads
+      min-width: 148px;
     }
   }
 
   .description {
     height: 100%;
-
     width: 100%;
     border: 0 solid #ccc;
     padding: 1rem;
 
     border-bottom-width: 0;
     border-bottom-color: #070;
+  }
 
-    transition-property: border-bottom-width;
+  .tag-list {
+    position: absolute;
+    bottom: 0.2rem;
+
+    margin-top: 2rem;
+    opacity: 0;
+    margin-left: -0.25rem;
+    padding-inline-start: 0px;
+
     transition-timing-function: ease-out;
-    transition-duration: 0.05s;
+    transition-duration: 0.2s;
   }
 }
