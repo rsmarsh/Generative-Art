@@ -4,19 +4,22 @@
       "title": "Cityscape",
       "description": "Randomly generated trapezoid of varying shapes and colours which form a city skyline looking scene.",
       "filename": "cityscape.js",
-      "image": "cityscape.png"
+      "image": "cityscape.png",
+      "tags": ["static"]
     },
     {
       "title": "Truchet Lines",
       "description": "Overlapping lines which randomly move and turn in different directions on a grid.",
       "filename": "vennlines.js",
-      "image": "truchet.png"
+      "image": "truchet.png",
+      "tags": ["customisable", "CPU intensive!"]
     },
     {
       "title": "Noise Circle",
       "description": "A circle is drawn with added noise, creating a 3d effect",
       "filename": "circle-noise.js",
-      "image": "noise-circle.png"
+      "image": "noise-circle.png",
+      "tags": ["experimental", "math", "perspective"]
     }
   ],
 
@@ -24,7 +27,8 @@
     {
       "title": "Falling Shapes",
       "description": "Randomised shaped falling down, creating a tower",
-      "filename": "falling-shapes.js"
+      "filename": "falling-shapes.js",
+      "tags": ["p5.js", "animation", "live changes"]
     }
   ]
 }

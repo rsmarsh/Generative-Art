@@ -23,6 +23,9 @@
 
     img {
       max-height: 100%;
+
+      // Prevents a visual judder while the image loads
+      min-width: 148px;
     }
   }
 
@@ -39,5 +42,9 @@
     transition-property: border-bottom-width;
     transition-timing-function: ease-out;
     transition-duration: 0.05s;
+  }
+
+  .tag-list {
+    padding-inline-start: 0px;
   }
 }
