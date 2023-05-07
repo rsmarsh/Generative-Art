@@ -1,4 +1,8 @@
 /git
 /node_modules
-/dist
 /debug.log
+/dist/*
+
+# Ignore everything in the public directory except the _redirects file
+/public/*
+!/public/_redirects
